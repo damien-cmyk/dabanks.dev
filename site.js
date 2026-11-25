@@ -1,6 +1,6 @@
 // The page is its own demo: what the visitor captures is cut out of the page, described, and banked.
 // Everything happens in the tab, nothing is sent anywhere.
-import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=afbe098e";
+import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=5f57468e";
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html = "") => Object.assign(document.createElement(tag), { className: cls, innerHTML: html });
@@ -23,6 +23,22 @@ function screen(id) {
   s.style.aspectRatio = `${r.w} / ${r.h}`;
   return s;
 }
+/** The recording of a ref, laid over its picture once it plays. */
+const moves = (id) => REFS[id].clip && !still && !navigator.connection?.saveData;
+function play(s, id) {
+  let v = s.querySelector("video");
+  if (!v) {
+    v = Object.assign(el("video", ""), { src: `clips/${id}.mp4`, muted: true, loop: true, playsInline: true, tabIndex: -1 });
+    v.setAttribute("aria-hidden", "true");
+    v.addEventListener("playing", () => v.classList.add("on"), { once: true });
+    s.append(v);
+  }
+  v.play().catch(() => {});
+}
+const onScreen = new IntersectionObserver((list) => {
+  for (const { target, isIntersecting } of list) if (isIntersecting) play(target, target.dataset.clip); else target.querySelector("video")?.pause();
+}, { threshold: 0.2 });
+const live = (s, id) => { if (moves(id)) { s.dataset.clip = id; onScreen.observe(s); } };
 /** A piece of the page, cut out where the visitor drew: a copy of what was under it, shifted and clipped. */
 function cutout(rect) {
   const d = desk.getBoundingClientRect(), s = el("div", "s cut"), i = el("div", "i"), copy = desk.cloneNode(false);
@@ -36,7 +52,13 @@ function cutout(rect) {
   for (const node of desk.children) {
     const b = node.getBoundingClientRect();
     if (node.dataset.ui !== undefined || b.right < d.left + rect.x || b.left > d.left + rect.x + rect.w || b.bottom < d.top + rect.y || b.top > d.top + rect.y + rect.h) continue;
-    const c = node.cloneNode(true);
+    const c = node.cloneNode(true), v = node.querySelector("video.on");
+    c.querySelector("video")?.remove();
+    if (v?.videoWidth) {
+      const k = Math.min(1, (v.clientWidth * 2) / v.videoWidth), frame = Object.assign(document.createElement("canvas"), { width: v.videoWidth * k, height: v.videoHeight * k });
+      frame.getContext("2d").drawImage(v, 0, 0, frame.width, frame.height);
+      c.querySelector("img").src = frame.toDataURL("image/jpeg", 0.85);
+    }
     for (const n of [c, ...c.querySelectorAll("*")]) { n.removeAttribute("id"); n.removeAttribute("tabindex"); if (n.tagName === "A" || n.tagName === "BUTTON") n.tabIndex = -1; }
     copy.append(c);
   }
@@ -81,6 +103,10 @@ function paintGrid(fresh) {
       const frame = el("div", "card-in"), shot = r.draw();
       fitIn(shot, 204);
       frame.append(shot);
+      if (r.id && moves(r.id)) {
+        f.addEventListener("pointerenter", () => play(shot, r.id));
+        f.addEventListener("pointerleave", () => { shot.querySelector("video").pause(); shot.querySelector("video").remove(); });
+      }
       f.append(frame, el("figcaption", "", `<b>${esc(r.title)}</b>${r.id ? byline(r.id) : `<span class="by">${esc(r.tags.slice(0, 3).join(", "))}</span>`}`));
       return f;
     }) : [el("p", "none", "Nothing like that in the bank yet.")]));
@@ -113,7 +139,8 @@ const phase = (p, status) => {
   $("ears").setAttribute("aria-expanded", p === "menu");
   $("status").textContent = status ?? (p === "idle" ? `${bank.length}` : `${bank.length} refs`);
 };
-const working = () => ["busy", "saved"].includes(notch.dataset.phase);
+let flying = false;
+const working = () => flying || ["busy", "saved"].includes(notch.dataset.phase);
 const inside = () => notch.matches(":hover") || notch.contains(document.activeElement);
 const settle = () => working() || phase(inside() ? "menu" : "idle");
 const later = () => { clearTimeout(timer); timer = setTimeout(settle, 220); };
@@ -125,19 +152,24 @@ $("ears").addEventListener("click", () => working() || phase(notch.dataset.phase
 addEventListener("keydown", (e) => e.key === "Escape" && !working() && (document.activeElement.blur?.(), phase("idle")));
 document.addEventListener("pointerdown", (e) => !notch.contains(e.target) && !working() && phase("idle"));
 
+/** Puts a ref in the notch, whole: its picture and what is known of it so far. */
+function present(ref) {
+  const t = thumb(ref), text = el("div", "", "<b></b><span></span>");
+  fitIn(t.firstChild, 64);
+  for (const i of t.querySelectorAll("img")) { i.loading = "eager"; i.decoding = "sync"; }
+  $("result").replaceChildren(t, text);
+  return t;
+}
+const tell = (title, sub) => { const [b, span] = $("result").lastChild.children; b.textContent = title; span.textContent = sub; };
 /** Runs a ref through the notch: reading, saved, then back to rest. */
-async function take(ref) {
+async function take(ref, landed) {
   clearTimeout(timer);
-  const show = (title, sub) => {
-    const text = el("div", "");
-    text.append(Object.assign(el("b", ""), { textContent: title }), Object.assign(el("span", ""), { textContent: sub }));
-    $("result").replaceChildren(thumb(ref), text);
-  };
-  show("Reading the screen", "Naming its patterns");
+  if (!landed) present(ref);
+  tell("Reading the screen", "Naming its patterns");
   phase("busy", "Analyzing");
   await wait(1250);
   bankIt(ref);
-  show(ref.title, [ref.id ? `by ${PEOPLE[REFS[ref.id].by].name}` : "", ...ref.tags.slice(0, 3)].filter(Boolean).join(", "));
+  tell(ref.title, [ref.id ? `by ${PEOPLE[REFS[ref.id].by].name}` : "", ...ref.tags.slice(0, 3)].filter(Boolean).join(", "));
   phase("saved", "Saved");
   await wait(2000);
   if (notch.dataset.phase === "saved") { notch.dataset.phase = "idle"; settle(); }
@@ -180,25 +212,49 @@ function describe(rect) {
 async function capture(rect, byHand, id) {
   const info = describe(rect);
   const master = id ? null : cutout(rect);
-  const draw = () => (id ? screen(id) : again(master));
-  const d = desk.getBoundingClientRect();
-  const fly = draw();
-  fly.classList.add("fly");
-  Object.assign(fly.style, { left: `${d.left + rect.x}px`, top: `${d.top + rect.y}px`, width: `${rect.w}px` });
-  document.body.append(fly);
-  if (!still) {
-    phase("busy", "Analyzing");
-    const k = Math.min(104 / rect.w, 64 / rect.h), n = notch.getBoundingClientRect();
-    const to = [innerWidth / 2 - Math.min(600, innerWidth - 44) / 2 + 20 - (d.left + rect.x), 46 - n.top - (d.top + rect.y)];
-    await fly.animate([
-      { transform: "none", offset: 0 },
-      { transform: "scale(1.03)", offset: 0.18, easing: "cubic-bezier(.5,0,.2,1)" },
-      { transform: `translate(${to[0]}px, ${to[1]}px) scale(${k})`, opacity: 1, offset: 0.94 },
-      { transform: `translate(${to[0]}px, ${to[1]}px) scale(${k})`, opacity: 0 },
-    ], { duration: 820 }).finished;
+  const ref = { ...info, draw: () => (id ? screen(id) : again(master)), mine: byHand };
+  if (still) return take(ref);
+  flying = true;
+  try {
+    await fly(ref, rect);
+  } finally {
+    flying = false;
   }
-  fly.remove();
-  await take({ ...info, draw, mine: byHand });
+  await take(ref, true);
+}
+
+const ease = (u) => (u < 0.5 ? 4 * u ** 3 : 1 - (-2 * u + 2) ** 3 / 2);
+/** The capture lifts off, bends toward the notch, and lands exactly where its thumbnail is. */
+async function fly(ref, rect) {
+  clearTimeout(timer);
+  const d = desk.getBoundingClientRect(), shot = ref.draw(), slot = present(ref);
+  tell("Reading the screen", "Naming its patterns");
+  shot.classList.add("fly");
+  shot.style.setProperty("--k", 1);
+  Object.assign(shot.style, { left: `${d.left + rect.x}px`, top: `${d.top + rect.y}px`, width: `${rect.w}px` });
+  for (const i of shot.querySelectorAll("img")) { i.loading = "eager"; i.decoding = "sync"; }
+  await Promise.all([...shot.querySelectorAll("img"), ...slot.querySelectorAll("img")].map((i) => i.decode().catch(() => {})));
+  slot.style.visibility = "hidden";
+  document.body.append(shot);
+
+  // where the thumbnail will be once the notch is open: the panel never moves, only its frame grows
+  const panel = $("result").getBoundingClientRect(), wide = Math.min(600, innerWidth - 44), n = notch.getBoundingClientRect();
+  const left = innerWidth / 2 - wide / 2 + (panel.left - n.left) + slot.offsetLeft, top = panel.top + slot.offsetTop;
+  const w = Math.min(slot.offsetWidth, (64 * rect.w) / rect.h), k = w / rect.w, h = rect.h * k;
+  const dx = left + slot.offsetWidth / 2 - (d.left + rect.x + rect.w / 2), dy = top + slot.offsetHeight / 2 - (d.top + rect.y + rect.h / 2);
+  const tilt = Math.max(-7, Math.min(7, dx / 70)), LIFT = 0.17, N = 48;
+  const frames = Array.from({ length: N + 1 }, (_, i) => {
+    const t = i / N, l = Math.min(1, t / LIFT), u = Math.max(0, (t - LIFT) / (1 - LIFT));
+    const x = ease(Math.min(1, u * 1.12)), y = ease(Math.max(0, u * 1.08 - 0.08)), s = ease(u);
+    const size = (1 + 0.035 * Math.sin((l * Math.PI) / 2) * (1 - s)) * (1 + (k - 1) * s);
+    return { transform: `translate(${dx * x}px, ${dy * y - 8 * Math.sin((l * Math.PI) / 2) * (1 - s)}px) rotate(${tilt * Math.sin(Math.PI * u) ** 2}deg) scale(${size})`, borderRadius: `${14 + (Math.min(8, h / 4) / k - 14) * s}px` };
+  });
+  setTimeout(() => phase("busy", "Analyzing"), 430); // the notch opens in time to catch it
+  await shot.animate(frames, { duration: 1050, fill: "forwards" }).finished;
+  slot.style.visibility = "";
+  slot.firstChild.style.borderRadius = `${Math.min(8, h / 4)}px`;
+  shot.remove();
+  notch.animate([{ scale: 1 }, { scale: "1.018 1.05" }, { scale: 1 }], { duration: 380, easing: "cubic-bezier(.3,.7,.3,1)" });
 }
 
 const sel = $("sel");
@@ -249,6 +305,7 @@ for (const id of SHOWN.slice(0, 9)) {
   const f = el("div", "ref"), s = screen(id);
   f.dataset.ref = id;
   s.querySelector("img").loading = "eager";
+  live(s, id);
   s.tabIndex = 0;
   s.setAttribute("role", "button");
   s.setAttribute("aria-label", `Capture ${REFS[id].title}, by ${PEOPLE[REFS[id].by].name}`);
@@ -267,7 +324,7 @@ async function demo() {
   if (small.matches || still || working()) return;
   const run = ++playing, gone = () => run !== playing;
   const d = desk.getBoundingClientRect();
-  const on = desk.querySelector(`[data-ref="${demos++ % 2 ? "0ab5ac08" : "2ef4ffd8"}"] .s`).getBoundingClientRect();
+  const on = desk.querySelector(`[data-ref="${demos++ % 2 ? "2ef4ffd8" : "0ab5ac08"}"] .s`).getBoundingClientRect();
   const a = [on.left - d.left - 12, on.top - d.top - 12], b = [on.right - d.left + 12, on.bottom - d.top + 34];
   const at = (x, y) => { ghost.style.left = `${x}px`; ghost.style.top = `${y}px`; };
   const move = (from, to, ms, each) => new Promise((ok) => {
@@ -290,12 +347,13 @@ async function demo() {
   await move(a, b, 800, (x, y) => paintSel(a[0], a[1], x - a[0], y - a[1]));
   if (gone()) return void (sel.hidden = !drag);
   ghost.style.opacity = 0;
+  if (desk.getBoundingClientRect().bottom < innerHeight * 0.5) return void (sel.hidden = true);
   shoot({ x: a[0], y: a[1], w: b[0] - a[0], h: b[1] - a[1] }, false);
 }
 
 $("try").addEventListener("click", () => {
   if (!small.matches && !still) return void demo();
-  takeScreen(desk.querySelector('[data-ref="2f16eda8"] .s'));
+  takeScreen(desk.querySelector('[data-ref="5c3268de"] .s'));
 });
 
 // ---------- read ----------
@@ -353,20 +411,78 @@ $("try").addEventListener("click", () => {
   }, { threshold: 0.5 }).observe(scene);
 }
 
-// ---------- designers ----------
+// ---------- designers: a deck that follows the pointer, and pages the way the list runs ----------
 {
-  const list = $("who-list");
+  const list = $("who-list"), deck = $("deck"), stage = $("who-stage");
+  let cards = [], at = 1, vel = 0, goal = 1, frame = 0, front = -1, who = -1, near = false;
+  const place = () => {
+    let moving = false;
+    vel = (vel + (goal - at) * 0.09) * 0.76;
+    at += vel;
+    if (still) at = goal;
+    if (Math.abs(goal - at) + Math.abs(vel) > 0.001) moving = true;
+    const now = performance.now();
+    cards.forEach((c, i) => {
+      if (now > c.from) {
+        c.vy = (c.vy + (0 - c.y) * 0.1) * 0.75;
+        c.y += c.vy;
+      }
+      if (still) c.y = 0;
+      if (Math.abs(c.y) + Math.abs(c.vy) > 0.002) moving = true;
+      const d = i - at, far = Math.min(2, Math.abs(d));
+      c.node.style.transform = `translate(-50%, -50%) translate(${d * 44}%, ${c.y * 46}%) scale(${1 - far * 0.14})`;
+      c.node.style.zIndex = 20 - Math.round(far * 8);
+      c.node.style.opacity = Math.max(0, 1 - Math.abs(c.y) * 1.15);
+      c.node.style.setProperty("--dim", Math.min(1, far));
+    });
+    const lead = Math.round(Math.max(0, Math.min(cards.length - 1, at)));
+    if (lead !== front) { front = lead; lend(); }
+    frame = moving ? requestAnimationFrame(place) : 0;
+  };
+  const go = () => { frame ||= requestAnimationFrame(place); };
+  /** The card in front plays, and gives its title. */
+  const lend = () => {
+    cards.forEach((c, i) => {
+      if (i === front && near && moves(c.id)) play(c.shot, c.id);
+      else c.shot.querySelector("video")?.pause();
+    });
+    const t = stage.querySelector(".who-title");
+    if (!t || t.textContent === REFS[cards[front].id].title) return;
+    t.textContent = REFS[cards[front].id].title;
+    if (!still) t.animate([{ opacity: 0 }, {}], { duration: 300 });
+  };
   const show = (n) => {
-    const d = FEATURED[n], name = PEOPLE[d.handle].name;
+    if (n === who) return;
+    const d = FEATURED[n], dir = who < 0 ? 0 : n > who ? 1 : -1, name = PEOPLE[d.handle].name;
     [...list.children].forEach((b, i) => { b.classList.toggle("on", i === n); b.setAttribute("aria-pressed", i === n); });
-    const fan = el("div", "fan");
-    fan.append(...d.refs.map((id) => {
-      const a = Object.assign(el("a", ""), { href: REFS[id].url, target: "_blank", rel: "noopener", title: REFS[id].title });
-      a.append(screen(id));
-      return a;
-    }));
-    const id = el("div", "who-id", `${face(d.handle)}<div><b>${esc(name)}</b><span>${d.count} refs, stands out for ${esc(d.traits.slice(0, 2).join(", "))} and ${esc(d.traits[2])}</span></div><a class="pill" href="https://x.com/${d.handle}" target="_blank" rel="noopener">@${d.handle}</a>`);
-    $("who-stage").replaceChildren(fan, id);
+    mark(n);
+    if (dir && !still) {
+      const old = el("div", "leaving");
+      old.append(...cards.map((c) => c.node));
+      old.querySelectorAll("video").forEach((v) => v.pause());
+      deck.before(old);
+      old.animate([{}, { transform: `translateY(${dir * -110}px) scale(0.94)`, opacity: 0 }], { duration: 300, easing: "cubic-bezier(.5,0,.8,.4)", fill: "forwards" }).finished.then(() => old.remove());
+    }
+    who = n;
+    cards = [d.refs[1], d.refs[0], d.refs[2]].filter(Boolean).map((id, i) => {
+      const a = Object.assign(el("a", ""), { href: REFS[id].url, target: "_blank", rel: "noopener", draggable: false }), shot = screen(id);
+      shot.append(el("i", "dim"));
+      a.append(shot);
+      a.addEventListener("focus", () => { if (a.matches(":focus-visible")) { goal = i; go(); } });
+      return { id, node: a, shot, y: dir, vy: 0, from: performance.now() + [130, 60, 190][i] };
+    });
+    at = goal = 1;
+    vel = 0;
+    front = -1;
+    deck.replaceChildren(...cards.map((c) => c.node));
+    $("who-id").innerHTML = `${face(d.handle)}<div><b>${esc(name)}</b><span>${d.count} refs, stands out for ${esc(d.traits.slice(0, 2).join(", "))} and ${esc(d.traits[2])}</span></div><a class="pill" href="https://x.com/${d.handle}" target="_blank" rel="noopener">@${d.handle}</a>`;
+    if (dir && !still) [...$("who-id").children].forEach((c, i) => c.animate([{ opacity: 0, transform: `translateY(${dir * 16}px)` }, {}], { duration: 520, delay: 90 + i * 50, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" }));
+    place();
+  };
+  /** The highlight slides from one name to the other. */
+  const mark = (n) => {
+    const b = list.children[n];
+    for (const [k, v] of [["x", b.offsetLeft], ["y", b.offsetTop], ["w", b.offsetWidth], ["h", b.offsetHeight]]) list.style.setProperty(`--${k}`, `${v}px`);
   };
   list.append(...FEATURED.map((d, n) => {
     const b = el("button", "", `${face(d.handle)}<div><b>${esc(PEOPLE[d.handle].name)}</b><span>${esc(d.traits.join(", "))}</span></div><i>${d.count}</i>`);
@@ -374,102 +490,108 @@ $("try").addEventListener("click", () => {
     b.addEventListener("click", () => show(n));
     return b;
   }));
+  stage.prepend(Object.assign(el("p", "who-title"), { ariaHidden: "true" }));
   show(0);
+  new ResizeObserver(() => mark(who)).observe(list);
+  new IntersectionObserver(([e]) => { near = e.isIntersecting; if (cards.length) lend(); }, { threshold: 0.3 }).observe(stage);
+
+  // a third of the stage per card, and a little give inside it
+  let hold = null, slid = false;
+  const last = () => cards.length - 1;
+  deck.addEventListener("pointermove", (e) => {
+    if (hold) {
+      const d = hold.x - e.clientX;
+      if (Math.abs(d) > 6) slid = true;
+      goal = Math.max(-0.3, Math.min(last() + 0.3, hold.at + d / 220));
+      return go();
+    }
+    if (e.pointerType !== "mouse") return;
+    const b = deck.getBoundingClientRect(), u = Math.max(0, Math.min(0.999, (e.clientX - b.left) / b.width)) * cards.length, i = Math.floor(u);
+    goal = i + (u - i - 0.5) * 0.3;
+    go();
+  });
+  deck.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && !hold) { goal = 1; go(); } });
+  deck.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") { hold = { x: e.clientX, at: goal }; slid = false; } });
+  for (const end of ["pointerup", "pointercancel"]) addEventListener(end, () => {
+    if (!hold) return;
+    hold = null;
+    goal = Math.max(0, Math.min(last(), Math.round(goal)));
+    go();
+  });
+  deck.addEventListener("click", (e) => { if (slid) { e.preventDefault(); slid = false; } });
 }
 
-// ---------- mcp: an agent at work, with a plug to pull ----------
+// ---------- mcp: one conversation, and the plug it depends on ----------
 {
+  const built = (cls) => { const b = el("div", "built"); b.append(document.querySelector(`#cmp ${cls}`).cloneNode(true)); return b; };
   // what each call answers in the bank, as it really did
-  const DESIGN = "Design the Payouts screen", LIKE = "Make our onboarding feel like disarto's", FIND = "Which command palettes did I keep?", BANK = "Bank this post by Jakub Krehel";
-  const build = (cls) => { const b = el("div", "built"); b.append(document.querySelector(`#cmp ${cls}`).cloneNode(true)); return b; };
-  const cards = (ids) => { const d = el("div", "cards"); d.append(...ids.map((id) => { const c = el("div", ""); c.append(screen(id)); c.insertAdjacentHTML("beforeend", `<b>${esc(REFS[id].title)}</b>${byline(id)}`); return c; })); return d; };
   const ASKS = [
-    { ask: DESIGN, calls: [["search_refs", "table filter", "12 refs"], ["get_ref", "2ef4ffd8"], ["search_refs", "kpi chart", "12 refs"], ["get_ref", "d8161c08"], ["search_refs", "selection modal", "5 refs"], ["get_ref", "57795fa1"]],
-      says: "Payouts, built on three screens you kept.", out: () => build(".with .po"), alone: "Here is a Payouts dashboard.", bare: () => build(".alone .ge") },
-    { ask: LIKE, calls: [["list_designers", "", "187 designers"], ["search_refs", "onboarding by @disarto_max", "2 refs"], ["get_ref", "b6d2e961"]],
-      says: "Their checklist folds away, counts progress in segments and grays out what is done. I'll start from that.", alone: "I don't know who that is. Can you send me some screens?" },
-    { ask: FIND, calls: [["list_tags", "", "107 tags"], ["search_refs", "command palette", "5 refs"]],
-      says: "Five. Here are two of them.", out: () => cards(["2b96f482", "9b3c4c37"]), alone: "I can't see what you keep." },
-    { ask: BANK, calls: [["add_ref", "x.com/jakubkrehel/status/2109…", "Added"], ["get_ref", "fd5a0db6"]],
-      says: "Banked, with its image and its author.", alone: "I have nowhere to save it." },
+    { name: "Payouts screen", ask: "Design the Payouts screen", calls: [["search_refs", "table filter"], ["get_ref", "2ef4ffd8"], ["search_refs", "kpi chart"], ["get_ref", "d8161c08"], ["search_refs", "selection modal"], ["get_ref", "57795fa1"]],
+      says: "Built on three screens you kept.", out: () => built(".with .po"), alone: "Here is a Payouts dashboard.", bare: () => built(".alone .ge") },
+    { name: "Onboarding like disarto's", ask: "Make our onboarding feel like disarto's", calls: [["list_designers", ""], ["search_refs", "onboarding by @disarto_max"], ["get_ref", "b6d2e961"]], big: true,
+      says: "The checklist folds away, counts progress in segments and grays out what is done. I'll start from that.", alone: "I don't know who that is." },
+    { name: "Command palettes", ask: "Which command palettes did I keep?", calls: [["search_refs", "command palette"], ["get_ref", "2b96f482"], ["get_ref", "9b3c4c37"]], big: true,
+      says: "Five. These two are the closest to ours.", alone: "I can't see what you keep." },
   ];
-  const TOOLS = [["search_refs", "Finds refs by screen, pattern or use", 0], ["get_ref", "Opens one and looks at the image", 0], ["list_designers", "Says who made what", 1], ["list_tags", "Gives the words of the bank", 2], ["add_ref", "Banks a link when you ask", 3]];
-  const CLIENTS = ["Claude Code", "Claude Desktop", "Cursor", "Any MCP client"];
-  const chat = $("chat"), wire = $("wire"), head = $("head");
-  let on = false, now = 0, run = 0, held = false, seen = false, client = CLIENTS[0];
-
-  const press = (nodes, n) => [...nodes].forEach((b, i) => { b.classList.toggle("on", i === n); b.setAttribute("aria-pressed", i === n); });
-  const lit = (name) => { for (const b of $("kit").children) b.classList.toggle("lit", on && b.dataset.tool === name); };
-  const say = (node) => {
-    chat.append(node);
-    chat.scrollTo({ top: chat.scrollHeight, behavior: still ? "auto" : "smooth" });
-    return node;
-  };
-  async function play(n, quick = still) {
+  const panel = $("mcp"), chat = $("chat"), wire = $("wire"), head = $("head");
+  let on = false, now = 0, run = 0, held = false, seen = false;
+  const say = (node) => { chat.append(node); return node; };
+  async function ask(n, quick = still) {
     const id = ++run, gone = () => id !== run, t = ASKS[n], pause = (ms) => wait(quick ? 0 : ms);
     now = n;
-    press($("ag-side").children, n);
-    lit();
+    [...$("asks").children].forEach((b, i) => { b.classList.toggle("on", i === n); b.setAttribute("aria-pressed", i === n); });
     chat.replaceChildren();
-    for (let i = 0; !quick && i <= t.ask.length; i++) {
+    $("composer").classList.add("typing");
+    for (let i = quick ? t.ask.length : 0; i <= t.ask.length; i++) {
       $("typed").textContent = t.ask.slice(0, i);
-      await wait(24);
+      await pause(24);
       if (gone()) return;
     }
-    await pause(260);
+    $("composer").classList.remove("typing");
+    await pause(500);
     if (gone()) return;
-    $("typed").textContent = "";
-    say(el("p", "me", esc(t.ask)));
-    const who = say(el("p", "who-says", `<b>${client}</b><span>thinking</span>`));
-    await pause(700);
-    if (gone()) return;
-    const linked = on;
-    if (linked) {
-      const list = say(el("ol", "calls"));
-      for (const [tool, arg, result] of t.calls) {
-        const li = el("li", "wait", `<i>${tool}</i><span>${arg && !result ? "" : arg && tool === "add_ref" ? esc(arg) : arg ? `“${esc(arg)}”` : ""}</span><u></u>`);
-        list.append(li);
-        lit(tool);
-        say(list);
-        if (!result) li.children[1].textContent = REFS[arg].title;
-        await pause(result ? 720 : 560);
+    if (on) {
+      const step = say(el("p", "step busy", "")), seenRefs = say(el("div", t.big ? "seen big" : "seen"));
+      for (const [tool, arg] of t.calls) {
+        const ref = tool === "get_ref" && REFS[arg];
+        step.innerHTML = `${tool} <span>${esc(ref ? ref.title : arg)}</span>`;
+        await pause(ref ? 650 : 800);
         if (gone()) return;
-        li.className = "";
-        li.lastChild.textContent = result ?? "Image seen";
-        if (!result) {
-          const got = el("div", "saw");
-          got.append(thumb({ draw: () => screen(arg) }), el("div", "", `<b>${esc(REFS[arg].patterns[0][0].toUpperCase() + REFS[arg].patterns[0].slice(1))}</b>${byline(arg)}`));
-          li.append(got);
-          say(list);
-          await pause(520);
-          if (gone()) return;
-        }
+        if (!ref) continue;
+        const got = el("div", "");
+        got.append(thumb({ draw: () => screen(arg) }));
+        got.insertAdjacentHTML("beforeend", byline(arg, PEOPLE[ref.by].name));
+        seenRefs.append(got);
       }
-      lit();
-    } else {
-      say(el("p", "empty", "No refs to look at"));
-      await pause(900);
+      await pause(500);
       if (gone()) return;
+      step.className = "step";
+      step.textContent = t.says;
+    } else {
+      const step = say(el("p", "step busy", "Nothing to look at"));
+      await pause(1100);
+      if (gone()) return;
+      step.className = "step";
+      step.textContent = t.alone;
     }
-    await pause(350);
-    if (gone()) return;
-    who.lastChild.textContent = linked ? "done" : "done, without your refs";
-    say(el("p", "reply", linked ? t.says : t.alone));
-    const out = linked ? t.out : t.bare;
+    const out = on ? t.out : t.bare;
     if (out) say(out());
     if (quick || held) return;
     await wait(6500);
-    if (!gone() && !held && seen) play((n + 1) % ASKS.length);
+    if (!gone() && !held && seen) ask((n + 1) % ASKS.length);
   }
 
   // the plug: a spring pulls its head to the socket, or to where it hangs
-  const P = { x: 0, y: 0, vx: 0, vy: 0, r: 0 };
+  const P = { x: 0, y: 0, vx: 0, vy: 0, r: -90 };
   let frame = 0, grab = null, moved = false;
-  const spot = (plugged) => { const w = wire.clientWidth, y = wire.clientHeight; return plugged ? { x: w / 2, y: y - 111, r: 0 } : { x: w / 2 + Math.min(58, w / 5), y: y - 178, r: -16 }; };
+  const spot = (plugged) => {
+    const p = panel.getBoundingClientRect(), c = $("composer").getBoundingClientRect(), x = c.left - p.left, y = c.top - p.top + c.height / 2;
+    return plugged ? { x: x - 10, y, r: -90 } : { x: x - Math.min(96, x - 30), y: y + 58, r: -38 };
+  };
   const paint = () => {
-    head.style.transform = `translate(${P.x - 22}px, ${P.y}px) rotate(${P.r}deg)`;
-    const x = wire.clientWidth / 2, a = (P.r * Math.PI) / 180, tx = P.x + Math.sin(a) * 31, ty = P.y + 31 - Math.cos(a) * 29;
-    $("cord").setAttribute("d", `M${x} 52 C${x} ${52 + Math.max(50, ty - 52)} ${tx} ${ty - Math.max(46, (ty - 52) * 0.7)} ${tx} ${ty}`);
+    head.style.transform = `translate(${P.x - 22}px, ${P.y - 31}px) rotate(${P.r}deg)`;
+    const a = (P.r * Math.PI) / 180, dx = -Math.sin(a), dy = Math.cos(a), tx = P.x - dx * 29, ty = P.y - dy * 29, y = spot(true).y;
+    $("cord").setAttribute("d", `M-8 ${y} C${tx * 0.5} ${y} ${tx - dx * Math.max(20, tx * 0.4)} ${ty - dy * Math.max(20, tx * 0.4)} ${tx} ${ty}`);
   };
   const spring = () => {
     cancelAnimationFrame(frame);
@@ -482,35 +604,34 @@ $("try").addEventListener("click", () => {
       P.y += P.vy;
       P.r += (to.r - P.r) * 0.16;
       paint();
-      if (Math.abs(to.x - P.x) + Math.abs(to.y - P.y) + Math.abs(P.vx) + Math.abs(P.vy) > 0.1) frame = requestAnimationFrame(step);
+      if (Math.abs(to.x - P.x) + Math.abs(to.y - P.y) + Math.abs(P.vx) + Math.abs(P.vy) + Math.abs(to.r - P.r) > 0.1) frame = requestAnimationFrame(step);
     };
     step();
   };
   const plug = (state) => {
     on = state;
-    $("mcp").classList.toggle("linked", on);
+    panel.classList.toggle("linked", on);
     head.setAttribute("aria-pressed", on);
-    $("ag-link").textContent = on ? "dabanks, 5 tools" : "dabanks unplugged";
     spring();
   };
-  const byHand = (state) => { held = true; plug(state); play(now); };
+  const byHand = (state) => { held = true; plug(state); ask(now); };
+  const at = (e) => { const p = panel.getBoundingClientRect(); return [e.clientX - p.left, e.clientY - p.top]; };
   head.addEventListener("pointerdown", (e) => {
     if (e.button) return;
-    const w = wire.getBoundingClientRect();
-    grab = [e.clientX - w.left - P.x, e.clientY - w.top - P.y];
+    const [x, y] = at(e);
+    grab = [x - P.x, y - P.y];
     moved = false;
     head.setPointerCapture(e.pointerId);
     cancelAnimationFrame(frame);
   });
   head.addEventListener("pointermove", (e) => {
     if (!grab) return;
-    const w = wire.getBoundingClientRect(), to = spot(true);
-    const x = e.clientX - w.left - grab[0], y = e.clientY - w.top - grab[1];
+    const [px, py] = at(e), x = px - grab[0], y = py - grab[1], to = spot(true);
     if (Math.hypot(x - P.x, y - P.y) > 2) moved = true;
     if (!moved) return;
-    P.x = Math.max(20, Math.min(wire.clientWidth - 20, x));
-    P.y = Math.max(56, Math.min(to.y, y));
-    P.r = Math.max(-24, Math.min(24, (to.x - P.x) * 0.2));
+    P.x = Math.max(24, Math.min(to.x, x));
+    P.y = Math.max(to.y - 120, Math.min(to.y + 90, y));
+    P.r = -90 + Math.max(-50, Math.min(50, (P.y - to.y) * 0.8));
     P.vx = P.vy = 0;
     paint();
   });
@@ -518,50 +639,29 @@ $("try").addEventListener("click", () => {
     if (!grab) return;
     grab = null;
     if (!moved) return;
-    const to = spot(true), near = Math.hypot(to.x - P.x, to.y - P.y) < 52;
+    const to = spot(true), near = Math.hypot(to.x - P.x, to.y - P.y) < Math.min(34, to.x / 2);
     if (near === on) spring(); else byHand(near);
   });
   head.addEventListener("pointercancel", () => { grab = null; spring(); });
   head.addEventListener("click", () => { if (moved) moved = false; else byHand(!on); });
-  new ResizeObserver(() => { Object.assign(P, spot(on)); paint(); }).observe(wire);
+  new ResizeObserver(() => { Object.assign(P, spot(on)); paint(); }).observe(panel);
 
-  const named = (name) => {
-    client = name;
-    $("ag-name").textContent = $("sock").textContent = name === CLIENTS[3] ? "Your agent" : name;
-    press($("clients").children, CLIENTS.indexOf(name));
-    for (const b of chat.querySelectorAll(".who-says b")) b.textContent = $("ag-name").textContent;
-    client = $("ag-name").textContent;
-  };
-  $("clients").append(...CLIENTS.map((name) => {
-    const b = Object.assign(el("button", ""), { type: "button", textContent: name });
-    b.addEventListener("click", () => named(name));
+  $("asks").append(...ASKS.map((t, n) => {
+    const b = Object.assign(el("button", ""), { type: "button", textContent: t.name });
+    b.addEventListener("click", () => { held = true; ask(n); });
     return b;
   }));
-  $("ag-side").append(...ASKS.map(({ ask }, n) => {
-    const b = Object.assign(el("button", ""), { type: "button", textContent: ask });
-    b.addEventListener("click", () => { held = true; play(n); });
-    return b;
-  }));
-  $("kit").append(...TOOLS.map(([tool, what, n]) => {
-    const b = el("button", "", `<b>${tool}</b><span>${what}</span>`);
-    b.type = "button";
-    b.dataset.tool = tool;
-    b.addEventListener("click", () => { held = true; on || plug(true); play(n); });
-    return b;
-  }));
-  named(CLIENTS[0]);
   plug(false);
-  press($("ag-side").children, 0);
   new IntersectionObserver(async ([e]) => {
     seen = e.isIntersecting;
     if (!seen || run) return;
     run = 1;
-    if (!still) await wait(700);
+    if (!still) await wait(500);
     if (held) return;
     plug(true);
     if (!still) await wait(900);
-    if (!held) play(0);
-  }, { threshold: 0.35 }).observe(document.querySelector(".mcp-box"));
+    if (!held) ask(0);
+  }, { threshold: 0.6 }).observe($("composer"));
 }
 
 // ---------- compare ----------

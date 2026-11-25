@@ -15,7 +15,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=afbe098e">
+  <link rel="stylesheet" href="styles.css?v=5f57468e">
 </head>
 <body>
   <svg width="0" height="0" hidden aria-hidden="true">
@@ -63,27 +63,13 @@
         <h2>Plug your bank into your agent. <span>It looks before it designs.</span></h2>
         <p>Dabanks is an MCP server. Claude, Cursor, or any agent that speaks MCP searches your refs and sees the images.</p>
       </div>
-      <div class="mcp-box">
-        <div class="ag">
-          <div class="ag-bar"><i></i><i></i><i></i><b id="ag-name"></b><span class="ag-link" id="ag-link" role="status"></span></div>
-          <div class="ag-side" id="ag-side" role="group" aria-label="Ask the agent"></div>
-          <div class="ag-main">
-            <div class="chat" id="chat"></div>
-            <p class="composer" id="composer" aria-hidden="true"><span id="typed"></span><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></p>
-          </div>
-        </div>
-        <div class="plug">
-          <p><b>One plug, five tools.</b> <span>Pull it out and ask again.</span></p>
-          <div class="wire" id="wire">
-            <svg aria-hidden="true"><path id="cord"/></svg>
-            <div class="end-a"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>Your bank</div>
-            <button type="button" class="head" id="head" aria-pressed="false" aria-label="Dabanks plug"><svg viewBox="0 0 44 62" aria-hidden="true"><path class="pins" d="M15 40v16M29 40v16"/><path class="body" d="M16 2h12a4 4 0 0 1 4 4v6h2a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6h2V6a4 4 0 0 1 4-4z"/></svg></button>
-            <div class="end-b" id="end-b"><i></i><i></i><span id="sock"></span></div>
-          </div>
-          <div class="clients" id="clients" role="group" aria-label="Agent"></div>
-        </div>
+      <p class="composer" id="composer" aria-hidden="true"><i></i><i></i><span id="typed"></span></p>
+      <div class="asks" id="asks" role="group" aria-label="Ask the agent"></div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="wire" id="wire">
+        <svg aria-hidden="true"><path id="cord"/></svg>
+        <button type="button" class="head" id="head" aria-pressed="false" aria-label="Plug Dabanks in"><svg viewBox="0 0 44 62" aria-hidden="true"><path class="pins" d="M15 40v16M29 40v16"/><path class="body" d="M16 2h12a4 4 0 0 1 4 4v6h2a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6h2V6a4 4 0 0 1 4-4z"/></svg></button>
       </div>
-      <div class="kit" id="kit" role="group" aria-label="MCP tools"></div>
     </section>
 
     <section class="panel-x cmp" id="agent">
@@ -172,7 +158,7 @@
       </div>
       <div class="who-box">
         <div class="who-list" id="who-list" role="group" aria-label="Designers"></div>
-        <div class="who-stage" id="who-stage" aria-live="polite"></div>
+        <div class="who-stage" id="who-stage"><div class="deck" id="deck"></div><div class="who-id" id="who-id" aria-live="polite"></div></div>
       </div>
     </section>
 
@@ -195,6 +181,6 @@
     <p class="word" aria-hidden="true"><span>dabanks</span></p>
   </footer>
 
-  <script src="site.js?v=afbe098e" type="module"></script>
+  <script src="site.js?v=5f57468e" type="module"></script>
 </body>
 </html>
