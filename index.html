@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dabanks</title>
+  <meta name="description" content="A design reference bank that lives in your Mac's notch and that your agent reads before it designs.">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Dabanks">
+  <meta property="og:description" content="Your design references, in the bank.">
+  <meta property="og:url" content="https://dabanks.dev/">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://dabanks.dev/">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg width="0" height="0" hidden aria-hidden="true">
+    <symbol id="mark" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.5 5h11a3.5 3.5 0 0 1 3.5 3.5v8a3.5 3.5 0 0 1-3.5 3.5h-11A3.5 3.5 0 0 1 3 16.5v-8A3.5 3.5 0 0 1 6.5 5zM13.5 5h4v8.5l-2-1.8-2 1.8z"/></symbol>
+  </svg>
+
+  <section class="notch" id="notch" aria-label="Demo of the Dabanks notch" data-phase="idle">
+    <div class="ears">
+      <span class="ear"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg><b>Dabanks</b></span>
+      <span class="ear right"><i class="dot"></i><span id="status" role="status"></span></span>
+    </div>
+    <div class="panel" id="panel">
+      <div class="tiles">
+        <button type="button" data-do="screen"><svg viewBox="0 0 16 16"><path d="M2.5 5.5v-1a2 2 0 0 1 2-2h1M10.5 2.5h1a2 2 0 0 1 2 2v1M13.5 10.5v1a2 2 0 0 1-2 2h-1M5.5 13.5h-1a2 2 0 0 1-2-2v-1"/></svg><span>Capture<kbd>⌘⇧6</kbd></span></button>
+        <button type="button" data-do="video"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/></svg><span>Video<kbd>⌘⇧7</kbd></span></button>
+        <button type="button" data-do="tab"><svg viewBox="0 0 16 16"><path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2-2a2.6 2.6 0 0 0-3.7-3.7l-.7.7M9.2 6.8a2.6 2.6 0 0 0-3.7 0l-2 2a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/></svg><span>Tab<kbd>⌘⇧8</kbd></span></button>
+        <button type="button" data-do="paste"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="11" rx="2"/><path d="M6 3V2.5A.5.5 0 0 1 6.500 2h3a.5.5 0 0 1 .5.5V3"/></svg><span>Paste<kbd>⌘⇧9</kbd></span></button>
+      </div>
+      <div class="result" id="result" hidden></div>
+    </div>
+  </section>
+
+  <main>
+    <header class="hero">
+      <h1>Your design references, in the bank</h1>
+      <p>Dabanks lives in your Mac's notch. Capture a screen, it gets described and filed, and your agent looks at it before it designs.</p>
+    </header>
+
+    <section class="bank" aria-label="A sample bank">
+      <div class="filters" id="filters" role="group" aria-label="Filter the sample bank"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="points">
+      <article>
+        <h2>Capture without leaving your screen</h2>
+        <p>An area, a recording, the tab you are on, or a link you just copied. A post on X comes with its picture, its clip, and its words.</p>
+      </article>
+      <article>
+        <h2>Find it by what it does</h2>
+        <p>Claude reads every screen and names its patterns, its components, and its use. Search “dense table with filters” and you get the screens, not the file names.</p>
+      </article>
+      <article>
+        <h2>Design from your own taste</h2>
+        <p>Dabanks speaks MCP. Before a new screen, your agent searches your bank, opens the best refs, and starts from what you kept.</p>
+      </article>
+    </section>
+
+    <section class="agent" aria-label="What you ask your agent">
+      <p class="ask">Before designing the Invoices screen in Figma, search Dabanks for dense tables with filters and reuse their patterns.</p>
+      <ol>
+        <li><code>search_refs</code><span>dense table, filters</span></li>
+        <li><code>get_ref</code><span>looks at the image</span></li>
+        <li><code>search_refs</code><span>bulk actions</span></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <span class="brand"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>Dabanks</span>
+    <p>Your bank is stored on your Mac. Claude sees a screen to describe it, or when your agent asks for it.</p>
+  </footer>
+
+  <script src="site.js" type="module"></script>
+</body>
+</html>
