@@ -1,6 +1,6 @@
 // The page is its own demo: what the visitor captures is cut out of the page, described, and banked.
 // Everything happens in the tab, nothing is sent anywhere.
-import { SHOWN, REFS, PEOPLE, FEATURED, TAGS, TOTALS } from "./bank.js";
+import { SHOWN, REFS, PEOPLE, FEATURED, TAGS } from "./bank.js";
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html = "") => Object.assign(document.createElement(tag), { className: cls, innerHTML: html });
@@ -375,9 +375,6 @@ $("try").addEventListener("click", () => {
     return b;
   }));
   show(0);
-  const shown = Object.keys(PEOPLE).sort((a, b) => PEOPLE[a].name.localeCompare(PEOPLE[b].name, "en"));
-  $("credits-n").textContent = `The ${shown.length} designers on this page, out of ${TOTALS.designers} in the bank`;
-  $("credits").innerHTML = shown.map((h) => `<li><a class="by" href="https://x.com/${h}" target="_blank" rel="noopener">${face(h)}<b>@${h}</b></a></li>`).join("");
 }
 
 // ---------- mcp ----------

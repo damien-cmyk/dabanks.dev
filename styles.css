@@ -256,11 +256,6 @@ figcaption > b { font-weight: 400; white-space: nowrap; overflow: hidden; text-o
 .who-id b { display: block; font-size: 20px; font-weight: 400; letter-spacing: -0.02em; }
 .who-id span { color: var(--ink-2); font-size: 14px; }
 .who-id .pill { height: 38px; background: var(--key); font-size: 14px; }
-.credits { max-width: 1240px; margin: 28px auto 0; display: grid; gap: 14px; justify-items: center; }
-.credits p { text-align: center; font-size: 14px; color: var(--ink-3); }
-.credits ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; }
-.credits ul:has(a:hover) a:not(:hover) { opacity: 0.5; }
-.credits a { transition: opacity 0.2s; }
 
 /* ---------- mcp ---------- */
 .mcp-box { display: grid; grid-template-columns: 340px minmax(0, 1fr); max-width: 1240px; margin: 0 auto; border-radius: 26px; background: #0b0c0d; color: #f2f2f2; padding: 12px; gap: 12px; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.07); }

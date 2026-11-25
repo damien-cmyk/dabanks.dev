@@ -1861,4 +1861,3 @@ export const FEATURED = [
  }
 ];
 export const TAGS = [["button",202],["card",169],["sidebar",144],["list",116],["badge",91],["tabs",83],["dark",78],["search bar",75],["table",66],["chip",63],["dropdown",62],["kpi",60],["input",60],["avatar",59]];
-export const TOTALS = {"refs":353,"designers":187};
