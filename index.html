@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dabanks</title>
-  <meta name="description" content="A design reference bank that lives in your Mac's notch and that your agent reads before it designs.">
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="A design reference bank that lives in your Mac's notch, and that your agent reads before it designs.">
+  <meta name="theme-color" content="#eeeeeb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0c0d" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="Dabanks">
-  <meta property="og:description" content="Your design references, in the bank.">
+  <meta property="og:description" content="Bank every screen you like.">
   <meta property="og:url" content="https://dabanks.dev/">
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://dabanks.dev/">
@@ -16,67 +16,141 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="screens.css">
 </head>
 <body>
   <svg width="0" height="0" hidden aria-hidden="true">
     <symbol id="mark" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M6.5 5h11a3.5 3.5 0 0 1 3.5 3.5v8a3.5 3.5 0 0 1-3.5 3.5h-11A3.5 3.5 0 0 1 3 16.5v-8A3.5 3.5 0 0 1 6.5 5zM13.5 5h4v8.5l-2-1.8-2 1.8z"/></symbol>
   </svg>
 
-  <section class="notch" id="notch" aria-label="Demo of the Dabanks notch" data-phase="idle">
-    <div class="ears">
-      <span class="ear"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg><b>Dabanks</b></span>
-      <span class="ear right"><i class="dot"></i><span id="status" role="status"></span></span>
-    </div>
-    <div class="panel" id="panel">
-      <div class="tiles">
-        <button type="button" data-do="screen"><svg viewBox="0 0 16 16"><path d="M2.5 5.5v-1a2 2 0 0 1 2-2h1M10.5 2.5h1a2 2 0 0 1 2 2v1M13.5 10.5v1a2 2 0 0 1-2 2h-1M5.5 13.5h-1a2 2 0 0 1-2-2v-1"/></svg><span>Capture<kbd>⌘⇧6</kbd></span></button>
-        <button type="button" data-do="video"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/></svg><span>Video<kbd>⌘⇧7</kbd></span></button>
-        <button type="button" data-do="tab"><svg viewBox="0 0 16 16"><path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2-2a2.6 2.6 0 0 0-3.7-3.7l-.7.7M9.2 6.8a2.6 2.6 0 0 0-3.7 0l-2 2a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/></svg><span>Tab<kbd>⌘⇧8</kbd></span></button>
-        <button type="button" data-do="paste"><svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="11" rx="2"/><path d="M6 3V2.5A.5.5 0 0 1 6.500 2h3a.5.5 0 0 1 .5.5V3"/></svg><span>Paste<kbd>⌘⇧9</kbd></span></button>
+  <section class="notch" id="notch" aria-label="The Dabanks notch" data-phase="idle">
+    <div class="notch-in">
+      <button type="button" class="ears" id="ears" aria-expanded="false" aria-controls="panel">
+        <span class="ear"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg><b>Dabanks</b></span>
+        <span class="ear right"><i class="dot"></i><span id="status" role="status"></span></span>
+      </button>
+      <div class="panel" id="panel">
+        <div class="menu">
+          <div class="tiles">
+            <button type="button" data-do="capture"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5v-1a2 2 0 0 1 2-2h1M10.5 2.5h1a2 2 0 0 1 2 2v1M13.5 10.5v1a2 2 0 0 1-2 2h-1M5.5 13.5h-1a2 2 0 0 1-2-2v-1"/></svg><span>Capture<kbd>⌘⇧6</kbd></span></button>
+            <button type="button" data-do="player"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/></svg><span>Video<kbd>⌘⇧7</kbd></span></button>
+            <button type="button" data-do="stay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2-2a2.6 2.6 0 0 0-3.7-3.7l-.7.7M9.2 6.8a2.6 2.6 0 0 0-3.7 0l-2 2a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/></svg><span>Tab<kbd>⌘⇧8</kbd></span></button>
+            <button type="button" data-do="calendar"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="11" rx="2"/><path d="M6 3v-.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V3"/></svg><span>Paste<kbd>⌘⇧9</kbd></span></button>
+          </div>
+          <div class="recent" id="recent"></div>
+        </div>
+        <div class="result" id="result"></div>
       </div>
-      <div class="result" id="result" hidden></div>
     </div>
   </section>
 
   <main>
-    <header class="hero">
-      <h1>Your design references, in the bank</h1>
-      <p>Dabanks lives in your Mac's notch. Capture a screen, it gets described and filed, and your agent looks at it before it designs.</p>
-    </header>
+    <section class="panel-x desk" id="desk" aria-label="Try it">
+      <header class="hero">
+        <h1>Bank every screen you like. <span>Design from it later.</span></h1>
+        <p>Dabanks lives in your Mac's notch. What you capture gets read, filed, and handed to your agent before it designs.</p>
+        <div class="acts">
+          <button type="button" class="pill solid" id="try">Watch one get banked</button>
+          <a class="pill" href="#read">See what it reads</a>
+        </div>
+        <p class="hint"><span class="fine">Or drag over anything in this panel to bank it</span><span class="coarse">Tap a screen to bank it</span></p>
+      </header>
+      <div class="sel" id="sel" data-ui hidden><span id="size"></span></div>
+      <div class="ghost" id="ghost" data-ui aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg></div>
+    </section>
 
-    <section class="bank" aria-label="A sample bank">
-      <div class="filters" id="filters" role="group" aria-label="Filter the sample bank"></div>
+    <section class="panel-x read" id="read">
+      <div class="title">
+        <h2>Every capture gets read. <span>Down to its parts.</span></h2>
+        <p>Patterns, components, palette, and why it works. Point at a pattern to see where it is.</p>
+      </div>
+      <div class="scene" id="scene">
+        <div class="win">
+          <div class="win-bar"><span id="read-title"></span></div>
+          <div class="win-body">
+            <div class="win-shot" id="stage"></div>
+            <div class="win-info">
+              <p class="use" id="read-use"></p>
+              <dl>
+                <div><dt>Patterns</dt><dd><ul class="patterns" id="patterns"></ul></dd></div>
+                <div><dt>Components</dt><dd id="components"></dd></div>
+                <div><dt>Palette</dt><dd class="swatches" id="swatches"></dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="tabs" id="tabs" role="group" aria-label="Captures"></div>
+      </div>
+    </section>
+
+    <section class="panel-x cmp" id="agent">
+      <div class="title">
+        <h2>Your agent knows design. <span>Not your taste.</span></h2>
+        <p>Same prompt, two builds: your agent alone, then your agent after reading your bank.</p>
+      </div>
+      <p class="ask">Design the Payouts screen</p>
+      <div class="seg" role="group" aria-label="Build"><button type="button" data-x="100">Agent alone</button><button type="button" data-x="0">With Dabanks</button></div>
+      <div class="tray">
+        <div class="cmp-box" id="cmp">
+          <div class="side with"><div class="po">
+            <header><b>Payouts</b><span>New payout</span></header>
+            <div class="po-k"><p><span>Paid out this week</span><b>$48,210</b></p><svg viewBox="0 0 300 64" preserveAspectRatio="none"><path d="M0 48c24 2 32-18 57-15s32 20 58 15 28-32 60-29 32 23 55 20 35-22 70-25v50H0z" fill="#ececec"/><path d="M0 48c24 2 32-18 57-15s32 20 58 15 28-32 60-29 32 23 55 20 35-22 70-25" fill="none" stroke="#111" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+            <div class="po-f"><span class="set">Status: Pending</span><span class="set">Over $1,000</span><span>Bank</span><span>Date</span></div>
+            <div class="po-t">
+              <p class="on"><i></i><b>Cleo Marsh</b><span>Nov 27</span><em>Pending</em><u>$3,400.00</u></p>
+              <p class="on"><i></i><b>Atlas Freight</b><span>Nov 27</span><em>Pending</em><u>$9,120.00</u></p>
+              <p><i></i><b>Ines Duarte</b><span>Nov 28</span><em>Pending</em><u>$1,860.00</u></p>
+              <p><i></i><b>Bright Kiln</b><span>Nov 30</span><em>Pending</em><u>$2,245.00</u></p>
+            </div>
+            <div class="po-b"><b>2 selected</b><span>Approve</span><span>Hold</span></div>
+          </div></div>
+          <div class="side alone"><div class="ge">
+            <header><b>Payouts Dashboard</b><span>+ Create New Payout</span></header>
+            <div class="ge-k"><p><span>Total Payouts</span><b>$48,210.00</b><em>+12.5%</em></p><p><span>Pending</span><b>14</b><em>+3.2%</em></p><p><span>Completed</span><b>128</b><em>+8.1%</em></p><p><span>Failed</span><b>2</b><em>-0.4%</em></p></div>
+            <div class="ge-t">
+              <p class="th"><b>Recipient</b><b>Date</b><b>Status</b><b>Amount</b><b>Actions</b></p>
+              <p><span>Cleo Marsh</span><span>2026-11-27</span><em>PENDING</em><span>$3400.00</span><i>View</i></p>
+              <p><span>Atlas Freight</span><span>2026-11-27</span><em>PENDING</em><span>$9120.00</span><i>View</i></p>
+              <p><span>Ines Duarte</span><span>2026-11-28</span><em>PENDING</em><span>$1860.00</span><i>View</i></p>
+              <p><span>Bright Kiln</span><span>2026-11-30</span><em>PENDING</em><span>$2245.00</span><i>View</i></p>
+            </div>
+          </div></div>
+          <i class="bar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></i>
+          <input type="range" id="split" min="0" max="100" value="100" aria-label="Compare both builds">
+        </div>
+      </div>
+      <ol class="log" id="log"></ol>
+    </section>
+
+    <section class="panel-x find" id="find">
+      <div class="title">
+        <h2><label for="q">Find it by what it does.</label> <span>Not by where you saw it.</span></h2>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <input id="q" type="search" placeholder="Search the bank" autocomplete="off" spellcheck="false">
+        <output id="count" for="q"></output>
+      </div>
+      <div class="tries" id="tries"></div>
       <div class="grid" id="grid"></div>
     </section>
 
-    <section class="points">
-      <article>
-        <h2>Capture without leaving your screen</h2>
-        <p>An area, a recording, the tab you are on, or a link you just copied. A post on X comes with its picture, its clip, and its words.</p>
-      </article>
-      <article>
-        <h2>Find it by what it does</h2>
-        <p>Claude reads every screen and names its patterns, its components, and its use. Search “dense table with filters” and you get the screens, not the file names.</p>
-      </article>
-      <article>
-        <h2>Design from your own taste</h2>
-        <p>Dabanks speaks MCP. Before a new screen, your agent searches your bank, opens the best refs, and starts from what you kept.</p>
-      </article>
-    </section>
-
-    <section class="agent" aria-label="What you ask your agent">
-      <p class="ask">Before designing the Invoices screen in Figma, search Dabanks for dense tables with filters and reuse their patterns.</p>
-      <ol>
-        <li><code>search_refs</code><span>dense table, filters</span></li>
-        <li><code>get_ref</code><span>looks at the image</span></li>
-        <li><code>search_refs</code><span>bulk actions</span></li>
-      </ol>
+    <section class="panel-x keys" id="keys">
+      <div class="keys-text"><h2 id="key-text"></h2></div>
+      <div class="keys-pad">
+        <span class="key mod" aria-hidden="true">⌘<small>command</small></span><span class="key mod" aria-hidden="true">⇧<small>shift</small></span>
+        <button type="button" class="key" data-key="6">6<small>Capture</small></button><button type="button" class="key" data-key="7">7<small>Video</small></button><button type="button" class="key" data-key="8">8<small>Tab</small></button><button type="button" class="key" data-key="9">9<small>Paste</small></button>
+        <p>Press a key, or type its number.</p>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <span class="brand"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>Dabanks</span>
-    <p>Your bank is stored on your Mac. Claude sees a screen to describe it, or when your agent asks for it.</p>
+  <footer class="end">
+    <div class="end-top">
+      <p id="tally">Nothing banked yet. <a href="#desk">Go capture something</a></p>
+      <p>Your bank is stored on your Mac. Claude sees a screen to describe it, or when your agent asks for it.</p>
+    </div>
+    <p class="word" aria-hidden="true"><span>dabanks</span></p>
   </footer>
 
   <script src="site.js" type="module"></script>
