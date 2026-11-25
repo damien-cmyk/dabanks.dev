@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dabanks</title>
-  <meta name="description" content="A design reference bank that lives in your Mac's notch, and that your agent reads before it designs.">
+  <meta name="description" content="A design reference bank in your Mac's notch, and the MCP server your agent designs from.">
   <meta name="theme-color" content="#eeeeeb" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b0c0d" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="Dabanks">
-  <meta property="og:description" content="Bank every screen you like.">
+  <meta property="og:description" content="Bank every screen you like. Your agent designs from it.">
   <meta property="og:url" content="https://dabanks.dev/">
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://dabanks.dev/">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=f59d6fdd">
+  <link rel="stylesheet" href="styles.css?v=afbe098e">
 </head>
 <body>
   <svg width="0" height="0" hidden aria-hidden="true">
@@ -46,16 +46,86 @@
   <main>
     <section class="panel-x desk" id="desk" aria-label="Try it">
       <header class="hero">
-        <h1>Bank every screen you like. <span>Design from it later.</span></h1>
-        <p>Dabanks lives in your Mac's notch. What you capture gets read, filed, and handed to your agent before it designs.</p>
+        <h1>Bank every screen you like. <span>Your agent designs from it.</span></h1>
+        <p>A reference bank in your Mac's notch, and an MCP server that puts it in your agent's hands.</p>
         <div class="acts">
           <button type="button" class="pill solid" id="try">Watch one get banked</button>
-          <a class="pill" href="#read">See what it reads</a>
+          <a class="pill" href="#mcp">Watch an agent use it</a>
         </div>
         <p class="hint"><span class="fine">Or drag over anything in this panel to bank it</span><span class="coarse">Tap a screen to bank it</span></p>
       </header>
       <div class="sel" id="sel" data-ui hidden><span id="size"></span></div>
       <div class="ghost" id="ghost" data-ui aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg></div>
+    </section>
+
+    <section class="panel-x mcp" id="mcp">
+      <div class="title">
+        <h2>Plug your bank into your agent. <span>It looks before it designs.</span></h2>
+        <p>Dabanks is an MCP server. Claude, Cursor, or any agent that speaks MCP searches your refs and sees the images.</p>
+      </div>
+      <div class="mcp-box">
+        <div class="ag">
+          <div class="ag-bar"><i></i><i></i><i></i><b id="ag-name"></b><span class="ag-link" id="ag-link" role="status"></span></div>
+          <div class="ag-side" id="ag-side" role="group" aria-label="Ask the agent"></div>
+          <div class="ag-main">
+            <div class="chat" id="chat"></div>
+            <p class="composer" id="composer" aria-hidden="true"><span id="typed"></span><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></p>
+          </div>
+        </div>
+        <div class="plug">
+          <p><b>One plug, five tools.</b> <span>Pull it out and ask again.</span></p>
+          <div class="wire" id="wire">
+            <svg aria-hidden="true"><path id="cord"/></svg>
+            <div class="end-a"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>Your bank</div>
+            <button type="button" class="head" id="head" aria-pressed="false" aria-label="Dabanks plug"><svg viewBox="0 0 44 62" aria-hidden="true"><path class="pins" d="M15 40v16M29 40v16"/><path class="body" d="M16 2h12a4 4 0 0 1 4 4v6h2a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6h2V6a4 4 0 0 1 4-4z"/></svg></button>
+            <div class="end-b" id="end-b"><i></i><i></i><span id="sock"></span></div>
+          </div>
+          <div class="clients" id="clients" role="group" aria-label="Agent"></div>
+        </div>
+      </div>
+      <div class="kit" id="kit" role="group" aria-label="MCP tools"></div>
+    </section>
+
+    <section class="panel-x cmp" id="agent">
+      <div class="title">
+        <h2>Your agent knows design. <span>Not your taste.</span></h2>
+        <p>One Payouts screen, two builds. On one side your agent alone, on the other your agent after it read the bank.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Build"><button type="button" data-x="100">Agent alone</button><button type="button" data-x="0">With Dabanks</button></div>
+      <div class="tray">
+        <div class="cmp-box" id="cmp">
+          <div class="side with"><div class="po">
+            <header><b>Payouts</b><span>New payout</span></header>
+            <div class="po-k">
+              <p><span>Paid out this week</span><b>$48,210</b><i style="--h:42%"></i><i style="--h:58%"></i><i style="--h:36%"></i><i style="--h:100%" class="on"></i><i style="--h:70%"></i><i style="--h:52%"></i><i style="--h:24%"></i></p>
+              <p><span>Waiting for approval</span><b>14</b><i style="--h:30%"></i><i style="--h:44%"></i><i style="--h:52%"></i><i style="--h:60%"></i><i style="--h:100%" class="on"></i><i style="--h:40%"></i><i style="--h:34%"></i></p>
+            </div>
+            <div class="po-f"><span class="set">Status</span><span>Amount</span><span>Bank</span><span>Date</span></div>
+            <div class="po-t">
+              <p class="on"><i></i><b>Cleo Marsh</b><span>Nov 27</span><em>Pending</em><u>$3,400.00</u></p>
+              <p class="on"><i></i><b>Atlas Freight</b><span>Nov 27</span><em>Pending</em><u>$9,120.00</u></p>
+              <p><i></i><b>Ines Duarte</b><span>Nov 28</span><em>Pending</em><u>$1,860.00</u></p>
+              <p><i></i><b>Bright Kiln</b><span>Nov 30</span><em>Pending</em><u>$2,245.00</u></p>
+            </div>
+            <div class="po-b"><span>Clear selection</span><b>Approve 2 payouts</b></div>
+          </div></div>
+          <div class="side alone"><div class="ge">
+            <header><b>Payouts Dashboard</b><span>+ Create New Payout</span></header>
+            <div class="ge-k"><p><span>Total Payouts</span><b>$48,210.00</b><em>+12.5%</em></p><p><span>Pending</span><b>14</b><em>+3.2%</em></p><p><span>Completed</span><b>128</b><em>+8.1%</em></p><p><span>Failed</span><b>2</b><em>-0.4%</em></p></div>
+            <div class="ge-t">
+              <p class="th"><b>Recipient</b><b>Date</b><b>Status</b><b>Amount</b><b>Actions</b></p>
+              <p><span>Cleo Marsh</span><span>2026-11-27</span><em>PENDING</em><span>$3400.00</span><i>View</i></p>
+              <p><span>Atlas Freight</span><span>2026-11-27</span><em>PENDING</em><span>$9120.00</span><i>View</i></p>
+              <p><span>Ines Duarte</span><span>2026-11-28</span><em>PENDING</em><span>$1860.00</span><i>View</i></p>
+              <p><span>Bright Kiln</span><span>2026-11-30</span><em>PENDING</em><span>$2245.00</span><i>View</i></p>
+            </div>
+          </div></div>
+          <i class="bar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></i>
+          <input type="range" id="split" min="0" max="100" value="100" aria-label="Compare both builds">
+        </div>
+      </div>
+      <p class="log-title">What it took from the bank</p>
+      <ol class="log" id="log"></ol>
     </section>
 
     <section class="panel-x read" id="read">
@@ -106,59 +176,6 @@
       </div>
     </section>
 
-    <section class="panel-x mcp" id="mcp">
-      <div class="title">
-        <h2>Plugged into your agent. <span>Over MCP.</span></h2>
-        <p>The Dabanks server hands your bank to Claude, or any agent that speaks MCP. It looks at the images, not only the tags.</p>
-      </div>
-      <div class="mcp-box">
-        <div class="mcp-tools" id="mcp-tools" role="group" aria-label="MCP tools"></div>
-        <div class="mcp-out"><p class="mcp-call" id="mcp-call"></p><div class="mcp-reply" id="mcp-reply" aria-live="polite"></div></div>
-      </div>
-    </section>
-
-    <section class="panel-x cmp" id="agent">
-      <div class="title">
-        <h2>Your agent knows design. <span>Not your taste.</span></h2>
-        <p>Same prompt, two builds: your agent alone, then your agent after reading the bank.</p>
-      </div>
-      <p class="ask">Design the Payouts screen</p>
-      <div class="seg" role="group" aria-label="Build"><button type="button" data-x="100">Agent alone</button><button type="button" data-x="0">With Dabanks</button></div>
-      <div class="tray">
-        <div class="cmp-box" id="cmp">
-          <div class="side with"><div class="po">
-            <header><b>Payouts</b><span>New payout</span></header>
-            <div class="po-k">
-              <p><span>Paid out this week</span><b>$48,210</b><i style="--h:42%"></i><i style="--h:58%"></i><i style="--h:36%"></i><i style="--h:100%" class="on"></i><i style="--h:70%"></i><i style="--h:52%"></i><i style="--h:24%"></i></p>
-              <p><span>Waiting for approval</span><b>14</b><i style="--h:30%"></i><i style="--h:44%"></i><i style="--h:52%"></i><i style="--h:60%"></i><i style="--h:100%" class="on"></i><i style="--h:40%"></i><i style="--h:34%"></i></p>
-            </div>
-            <div class="po-f"><span class="set">Status</span><span>Amount</span><span>Bank</span><span>Date</span></div>
-            <div class="po-t">
-              <p class="on"><i></i><b>Cleo Marsh</b><span>Nov 27</span><em>Pending</em><u>$3,400.00</u></p>
-              <p class="on"><i></i><b>Atlas Freight</b><span>Nov 27</span><em>Pending</em><u>$9,120.00</u></p>
-              <p><i></i><b>Ines Duarte</b><span>Nov 28</span><em>Pending</em><u>$1,860.00</u></p>
-              <p><i></i><b>Bright Kiln</b><span>Nov 30</span><em>Pending</em><u>$2,245.00</u></p>
-            </div>
-            <div class="po-b"><span>Clear selection</span><b>Approve 2 payouts</b></div>
-          </div></div>
-          <div class="side alone"><div class="ge">
-            <header><b>Payouts Dashboard</b><span>+ Create New Payout</span></header>
-            <div class="ge-k"><p><span>Total Payouts</span><b>$48,210.00</b><em>+12.5%</em></p><p><span>Pending</span><b>14</b><em>+3.2%</em></p><p><span>Completed</span><b>128</b><em>+8.1%</em></p><p><span>Failed</span><b>2</b><em>-0.4%</em></p></div>
-            <div class="ge-t">
-              <p class="th"><b>Recipient</b><b>Date</b><b>Status</b><b>Amount</b><b>Actions</b></p>
-              <p><span>Cleo Marsh</span><span>2026-11-27</span><em>PENDING</em><span>$3400.00</span><i>View</i></p>
-              <p><span>Atlas Freight</span><span>2026-11-27</span><em>PENDING</em><span>$9120.00</span><i>View</i></p>
-              <p><span>Ines Duarte</span><span>2026-11-28</span><em>PENDING</em><span>$1860.00</span><i>View</i></p>
-              <p><span>Bright Kiln</span><span>2026-11-30</span><em>PENDING</em><span>$2245.00</span><i>View</i></p>
-            </div>
-          </div></div>
-          <i class="bar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></i>
-          <input type="range" id="split" min="0" max="100" value="100" aria-label="Compare both builds">
-        </div>
-      </div>
-      <ol class="log" id="log"></ol>
-    </section>
-
     <section class="panel-x keys" id="keys">
       <div class="keys-text"><h2 id="key-text"></h2></div>
       <div class="keys-pad">
@@ -178,6 +195,6 @@
     <p class="word" aria-hidden="true"><span>dabanks</span></p>
   </footer>
 
-  <script src="site.js?v=f59d6fdd" type="module"></script>
+  <script src="site.js?v=afbe098e" type="module"></script>
 </body>
 </html>

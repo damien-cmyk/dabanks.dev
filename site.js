@@ -1,6 +1,6 @@
 // The page is its own demo: what the visitor captures is cut out of the page, described, and banked.
 // Everything happens in the tab, nothing is sent anywhere.
-import { SHOWN, REFS, PEOPLE, FEATURED, TAGS } from "./bank.js?v=f59d6fdd";
+import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=afbe098e";
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html = "") => Object.assign(document.createElement(tag), { className: cls, innerHTML: html });
@@ -377,40 +377,191 @@ $("try").addEventListener("click", () => {
   show(0);
 }
 
-// ---------- mcp ----------
+// ---------- mcp: an agent at work, with a plug to pull ----------
 {
-  const hit = (id, n) => { const d = el("div", "hit"); d.append(screen(id), el("div", "", `<b>${esc(REFS[id].title)}</b><span>${esc(REFS[id].patterns.slice(0, 2).join(", "))}</span>${byline(id)}`)); d.style.setProperty("--n", n); return d; };
-  const line = (n, html) => { const d = el("div", "row", html); d.style.setProperty("--n", n); return d; };
-  const TOOLS = [
-    ["search_refs", "Finds refs by screen, pattern or use", 'query: <em>"table"</em>, limit: <em>3</em>', () => ["2ef4ffd8", "2f16eda8", "8e5d5f6d"].map(hit)],
-    ["get_ref", "Opens one: the image and what was read in it", 'id: <em>"57795fa1"</em>', () => {
-      const r = REFS["57795fa1"], d = el("div", "got"), t = el("div", "", `<b>${esc(r.title)}</b><ul>${r.patterns.map((p) => `<li>${esc(p[0].toUpperCase() + p.slice(1))}</li>`).join("")}</ul><div class="swatches">${r.palette.map((c) => `<i style="background:${c}"></i>`).join("")}</div>${byline("57795fa1")}`);
-      d.append(screen("57795fa1"), t);
-      return [d];
-    }],
-    ["list_designers", "Says who made what, and what sets them apart", "", () => FEATURED.slice(0, 6).map((d, n) => line(n, `${face(d.handle)}<div><b>${esc(PEOPLE[d.handle].name)}</b><span>${esc(d.traits.join(", "))}</span></div><i>${d.count} refs</i>`))],
-    ["list_tags", "The vocabulary of the bank, counted", "", () => [el("div", "tagrow", TAGS.map(([t, n]) => `<span>${t}<i>${n}</i></span>`).join(""))]],
-    ["add_ref", "Banks a link, when you ask for it", 'url: <em>"x.com/jakubkrehel/status/2109…"</em>', () => [hit("fd5a0db6", 0)]],
+  // what each call answers in the bank, as it really did
+  const DESIGN = "Design the Payouts screen", LIKE = "Make our onboarding feel like disarto's", FIND = "Which command palettes did I keep?", BANK = "Bank this post by Jakub Krehel";
+  const build = (cls) => { const b = el("div", "built"); b.append(document.querySelector(`#cmp ${cls}`).cloneNode(true)); return b; };
+  const cards = (ids) => { const d = el("div", "cards"); d.append(...ids.map((id) => { const c = el("div", ""); c.append(screen(id)); c.insertAdjacentHTML("beforeend", `<b>${esc(REFS[id].title)}</b>${byline(id)}`); return c; })); return d; };
+  const ASKS = [
+    { ask: DESIGN, calls: [["search_refs", "table filter", "12 refs"], ["get_ref", "2ef4ffd8"], ["search_refs", "kpi chart", "12 refs"], ["get_ref", "d8161c08"], ["search_refs", "selection modal", "5 refs"], ["get_ref", "57795fa1"]],
+      says: "Payouts, built on three screens you kept.", out: () => build(".with .po"), alone: "Here is a Payouts dashboard.", bare: () => build(".alone .ge") },
+    { ask: LIKE, calls: [["list_designers", "", "187 designers"], ["search_refs", "onboarding by @disarto_max", "2 refs"], ["get_ref", "b6d2e961"]],
+      says: "Their checklist folds away, counts progress in segments and grays out what is done. I'll start from that.", alone: "I don't know who that is. Can you send me some screens?" },
+    { ask: FIND, calls: [["list_tags", "", "107 tags"], ["search_refs", "command palette", "5 refs"]],
+      says: "Five. Here are two of them.", out: () => cards(["2b96f482", "9b3c4c37"]), alone: "I can't see what you keep." },
+    { ask: BANK, calls: [["add_ref", "x.com/jakubkrehel/status/2109…", "Added"], ["get_ref", "fd5a0db6"]],
+      says: "Banked, with its image and its author.", alone: "I have nowhere to save it." },
   ];
-  let cycle, now = 0, held = false;
-  const show = (n) => {
-    now = n;
-    const [name, , args, reply] = TOOLS[n];
-    [...$("mcp-tools").children].forEach((b, i) => { b.classList.toggle("on", i === n); b.setAttribute("aria-pressed", i === n); });
-    $("mcp-call").innerHTML = `<b>${name}</b> ${args ? `{ ${args} }` : ""}`;
-    $("mcp-reply").replaceChildren(...reply());
+  const TOOLS = [["search_refs", "Finds refs by screen, pattern or use", 0], ["get_ref", "Opens one and looks at the image", 0], ["list_designers", "Says who made what", 1], ["list_tags", "Gives the words of the bank", 2], ["add_ref", "Banks a link when you ask", 3]];
+  const CLIENTS = ["Claude Code", "Claude Desktop", "Cursor", "Any MCP client"];
+  const chat = $("chat"), wire = $("wire"), head = $("head");
+  let on = false, now = 0, run = 0, held = false, seen = false, client = CLIENTS[0];
+
+  const press = (nodes, n) => [...nodes].forEach((b, i) => { b.classList.toggle("on", i === n); b.setAttribute("aria-pressed", i === n); });
+  const lit = (name) => { for (const b of $("kit").children) b.classList.toggle("lit", on && b.dataset.tool === name); };
+  const say = (node) => {
+    chat.append(node);
+    chat.scrollTo({ top: chat.scrollHeight, behavior: still ? "auto" : "smooth" });
+    return node;
   };
-  $("mcp-tools").append(...TOOLS.map(([name, what], n) => {
-    const b = el("button", "", `<b>${name}</b><span>${what}</span>`);
-    b.type = "button";
-    b.addEventListener("click", () => { held = true; show(n); });
+  async function play(n, quick = still) {
+    const id = ++run, gone = () => id !== run, t = ASKS[n], pause = (ms) => wait(quick ? 0 : ms);
+    now = n;
+    press($("ag-side").children, n);
+    lit();
+    chat.replaceChildren();
+    for (let i = 0; !quick && i <= t.ask.length; i++) {
+      $("typed").textContent = t.ask.slice(0, i);
+      await wait(24);
+      if (gone()) return;
+    }
+    await pause(260);
+    if (gone()) return;
+    $("typed").textContent = "";
+    say(el("p", "me", esc(t.ask)));
+    const who = say(el("p", "who-says", `<b>${client}</b><span>thinking</span>`));
+    await pause(700);
+    if (gone()) return;
+    const linked = on;
+    if (linked) {
+      const list = say(el("ol", "calls"));
+      for (const [tool, arg, result] of t.calls) {
+        const li = el("li", "wait", `<i>${tool}</i><span>${arg && !result ? "" : arg && tool === "add_ref" ? esc(arg) : arg ? `“${esc(arg)}”` : ""}</span><u></u>`);
+        list.append(li);
+        lit(tool);
+        say(list);
+        if (!result) li.children[1].textContent = REFS[arg].title;
+        await pause(result ? 720 : 560);
+        if (gone()) return;
+        li.className = "";
+        li.lastChild.textContent = result ?? "Image seen";
+        if (!result) {
+          const got = el("div", "saw");
+          got.append(thumb({ draw: () => screen(arg) }), el("div", "", `<b>${esc(REFS[arg].patterns[0][0].toUpperCase() + REFS[arg].patterns[0].slice(1))}</b>${byline(arg)}`));
+          li.append(got);
+          say(list);
+          await pause(520);
+          if (gone()) return;
+        }
+      }
+      lit();
+    } else {
+      say(el("p", "empty", "No refs to look at"));
+      await pause(900);
+      if (gone()) return;
+    }
+    await pause(350);
+    if (gone()) return;
+    who.lastChild.textContent = linked ? "done" : "done, without your refs";
+    say(el("p", "reply", linked ? t.says : t.alone));
+    const out = linked ? t.out : t.bare;
+    if (out) say(out());
+    if (quick || held) return;
+    await wait(6500);
+    if (!gone() && !held && seen) play((n + 1) % ASKS.length);
+  }
+
+  // the plug: a spring pulls its head to the socket, or to where it hangs
+  const P = { x: 0, y: 0, vx: 0, vy: 0, r: 0 };
+  let frame = 0, grab = null, moved = false;
+  const spot = (plugged) => { const w = wire.clientWidth, y = wire.clientHeight; return plugged ? { x: w / 2, y: y - 111, r: 0 } : { x: w / 2 + Math.min(58, w / 5), y: y - 178, r: -16 }; };
+  const paint = () => {
+    head.style.transform = `translate(${P.x - 22}px, ${P.y}px) rotate(${P.r}deg)`;
+    const x = wire.clientWidth / 2, a = (P.r * Math.PI) / 180, tx = P.x + Math.sin(a) * 31, ty = P.y + 31 - Math.cos(a) * 29;
+    $("cord").setAttribute("d", `M${x} 52 C${x} ${52 + Math.max(50, ty - 52)} ${tx} ${ty - Math.max(46, (ty - 52) * 0.7)} ${tx} ${ty}`);
+  };
+  const spring = () => {
+    cancelAnimationFrame(frame);
+    if (still) { Object.assign(P, spot(on)); return paint(); }
+    const step = () => {
+      const to = spot(on);
+      P.vx = (P.vx + (to.x - P.x) * 0.12) * 0.74;
+      P.vy = (P.vy + (to.y - P.y) * 0.12) * 0.74;
+      P.x += P.vx;
+      P.y += P.vy;
+      P.r += (to.r - P.r) * 0.16;
+      paint();
+      if (Math.abs(to.x - P.x) + Math.abs(to.y - P.y) + Math.abs(P.vx) + Math.abs(P.vy) > 0.1) frame = requestAnimationFrame(step);
+    };
+    step();
+  };
+  const plug = (state) => {
+    on = state;
+    $("mcp").classList.toggle("linked", on);
+    head.setAttribute("aria-pressed", on);
+    $("ag-link").textContent = on ? "dabanks, 5 tools" : "dabanks unplugged";
+    spring();
+  };
+  const byHand = (state) => { held = true; plug(state); play(now); };
+  head.addEventListener("pointerdown", (e) => {
+    if (e.button) return;
+    const w = wire.getBoundingClientRect();
+    grab = [e.clientX - w.left - P.x, e.clientY - w.top - P.y];
+    moved = false;
+    head.setPointerCapture(e.pointerId);
+    cancelAnimationFrame(frame);
+  });
+  head.addEventListener("pointermove", (e) => {
+    if (!grab) return;
+    const w = wire.getBoundingClientRect(), to = spot(true);
+    const x = e.clientX - w.left - grab[0], y = e.clientY - w.top - grab[1];
+    if (Math.hypot(x - P.x, y - P.y) > 2) moved = true;
+    if (!moved) return;
+    P.x = Math.max(20, Math.min(wire.clientWidth - 20, x));
+    P.y = Math.max(56, Math.min(to.y, y));
+    P.r = Math.max(-24, Math.min(24, (to.x - P.x) * 0.2));
+    P.vx = P.vy = 0;
+    paint();
+  });
+  head.addEventListener("pointerup", () => {
+    if (!grab) return;
+    grab = null;
+    if (!moved) return;
+    const to = spot(true), near = Math.hypot(to.x - P.x, to.y - P.y) < 52;
+    if (near === on) spring(); else byHand(near);
+  });
+  head.addEventListener("pointercancel", () => { grab = null; spring(); });
+  head.addEventListener("click", () => { if (moved) moved = false; else byHand(!on); });
+  new ResizeObserver(() => { Object.assign(P, spot(on)); paint(); }).observe(wire);
+
+  const named = (name) => {
+    client = name;
+    $("ag-name").textContent = $("sock").textContent = name === CLIENTS[3] ? "Your agent" : name;
+    press($("clients").children, CLIENTS.indexOf(name));
+    for (const b of chat.querySelectorAll(".who-says b")) b.textContent = $("ag-name").textContent;
+    client = $("ag-name").textContent;
+  };
+  $("clients").append(...CLIENTS.map((name) => {
+    const b = Object.assign(el("button", ""), { type: "button", textContent: name });
+    b.addEventListener("click", () => named(name));
     return b;
   }));
-  show(0);
-  new IntersectionObserver(([e]) => {
-    clearInterval(cycle);
-    if (e.isIntersecting && !still) cycle = setInterval(() => held || show((now + 1) % TOOLS.length), 3600);
-  }, { threshold: 0.5 }).observe($("mcp"));
+  $("ag-side").append(...ASKS.map(({ ask }, n) => {
+    const b = Object.assign(el("button", ""), { type: "button", textContent: ask });
+    b.addEventListener("click", () => { held = true; play(n); });
+    return b;
+  }));
+  $("kit").append(...TOOLS.map(([tool, what, n]) => {
+    const b = el("button", "", `<b>${tool}</b><span>${what}</span>`);
+    b.type = "button";
+    b.dataset.tool = tool;
+    b.addEventListener("click", () => { held = true; on || plug(true); play(n); });
+    return b;
+  }));
+  named(CLIENTS[0]);
+  plug(false);
+  press($("ag-side").children, 0);
+  new IntersectionObserver(async ([e]) => {
+    seen = e.isIntersecting;
+    if (!seen || run) return;
+    run = 1;
+    if (!still) await wait(700);
+    if (held) return;
+    plug(true);
+    if (!still) await wait(900);
+    if (!held) play(0);
+  }, { threshold: 0.35 }).observe(document.querySelector(".mcp-box"));
 }
 
 // ---------- compare ----------
