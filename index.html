@@ -16,7 +16,6 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="screens.css">
 </head>
 <body>
   <svg width="0" height="0" hidden aria-hidden="true">
@@ -33,9 +32,9 @@
         <div class="menu">
           <div class="tiles">
             <button type="button" data-do="capture"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5.5v-1a2 2 0 0 1 2-2h1M10.5 2.5h1a2 2 0 0 1 2 2v1M13.5 10.5v1a2 2 0 0 1-2 2h-1M5.5 13.5h-1a2 2 0 0 1-2-2v-1"/></svg><span>Capture<kbd>⌘⇧6</kbd></span></button>
-            <button type="button" data-do="player"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/></svg><span>Video<kbd>⌘⇧7</kbd></span></button>
-            <button type="button" data-do="stay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2-2a2.6 2.6 0 0 0-3.7-3.7l-.7.7M9.2 6.8a2.6 2.6 0 0 0-3.7 0l-2 2a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/></svg><span>Tab<kbd>⌘⇧8</kbd></span></button>
-            <button type="button" data-do="calendar"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="11" rx="2"/><path d="M6 3v-.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V3"/></svg><span>Paste<kbd>⌘⇧9</kbd></span></button>
+            <button type="button" data-do="0ab5ac08"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/></svg><span>Video<kbd>⌘⇧7</kbd></span></button>
+            <button type="button" data-do="b6d2e961"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2-2a2.6 2.6 0 0 0-3.7-3.7l-.7.7M9.2 6.8a2.6 2.6 0 0 0-3.7 0l-2 2a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/></svg><span>Tab<kbd>⌘⇧8</kbd></span></button>
+            <button type="button" data-do="66fda697"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="11" rx="2"/><path d="M6 3v-.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V3"/></svg><span>Paste<kbd>⌘⇧9</kbd></span></button>
           </div>
           <div class="recent" id="recent"></div>
         </div>
@@ -66,7 +65,7 @@
       </div>
       <div class="scene" id="scene">
         <div class="win">
-          <div class="win-bar"><span id="read-title"></span></div>
+          <div class="win-bar"><span id="read-title"></span><span id="read-by"></span></div>
           <div class="win-body">
             <div class="win-shot" id="stage"></div>
             <div class="win-info">
@@ -83,10 +82,46 @@
       </div>
     </section>
 
+    <section class="panel-x find" id="find">
+      <div class="title">
+        <h2><label for="q">Find it by what it does.</label> <span>Not by where you saw it.</span></h2>
+      </div>
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <input id="q" type="search" placeholder="Search the bank" autocomplete="off" spellcheck="false">
+        <output id="count" for="q"></output>
+      </div>
+      <div class="tries" id="tries"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="panel-x who" id="designers">
+      <div class="title">
+        <h2>Every screen keeps its author. <span>So you know who to learn from.</span></h2>
+        <p>Dabanks groups what each designer made and says what sets their work apart. Your agent can start from one of them.</p>
+      </div>
+      <div class="who-box">
+        <div class="who-list" id="who-list" role="group" aria-label="Designers"></div>
+        <div class="who-stage" id="who-stage" aria-live="polite"></div>
+      </div>
+      <div class="credits"><p id="credits-n"></p><ul id="credits"></ul></div>
+    </section>
+
+    <section class="panel-x mcp" id="mcp">
+      <div class="title">
+        <h2>Plugged into your agent. <span>Over MCP.</span></h2>
+        <p>The Dabanks server hands your bank to Claude, or any agent that speaks MCP. It looks at the images, not only the tags.</p>
+      </div>
+      <div class="mcp-box">
+        <div class="mcp-tools" id="mcp-tools" role="group" aria-label="MCP tools"></div>
+        <div class="mcp-out"><p class="mcp-call" id="mcp-call"></p><div class="mcp-reply" id="mcp-reply" aria-live="polite"></div></div>
+      </div>
+    </section>
+
     <section class="panel-x cmp" id="agent">
       <div class="title">
         <h2>Your agent knows design. <span>Not your taste.</span></h2>
-        <p>Same prompt, two builds: your agent alone, then your agent after reading your bank.</p>
+        <p>Same prompt, two builds: your agent alone, then your agent after reading the bank.</p>
       </div>
       <p class="ask">Design the Payouts screen</p>
       <div class="seg" role="group" aria-label="Build"><button type="button" data-x="100">Agent alone</button><button type="button" data-x="0">With Dabanks</button></div>
@@ -94,15 +129,18 @@
         <div class="cmp-box" id="cmp">
           <div class="side with"><div class="po">
             <header><b>Payouts</b><span>New payout</span></header>
-            <div class="po-k"><p><span>Paid out this week</span><b>$48,210</b></p><svg viewBox="0 0 300 64" preserveAspectRatio="none"><path d="M0 48c24 2 32-18 57-15s32 20 58 15 28-32 60-29 32 23 55 20 35-22 70-25v50H0z" fill="#ececec"/><path d="M0 48c24 2 32-18 57-15s32 20 58 15 28-32 60-29 32 23 55 20 35-22 70-25" fill="none" stroke="#111" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
-            <div class="po-f"><span class="set">Status: Pending</span><span class="set">Over $1,000</span><span>Bank</span><span>Date</span></div>
+            <div class="po-k">
+              <p><span>Paid out this week</span><b>$48,210</b><i style="--h:42%"></i><i style="--h:58%"></i><i style="--h:36%"></i><i style="--h:100%" class="on"></i><i style="--h:70%"></i><i style="--h:52%"></i><i style="--h:24%"></i></p>
+              <p><span>Waiting for approval</span><b>14</b><i style="--h:30%"></i><i style="--h:44%"></i><i style="--h:52%"></i><i style="--h:60%"></i><i style="--h:100%" class="on"></i><i style="--h:40%"></i><i style="--h:34%"></i></p>
+            </div>
+            <div class="po-f"><span class="set">Status</span><span>Amount</span><span>Bank</span><span>Date</span></div>
             <div class="po-t">
               <p class="on"><i></i><b>Cleo Marsh</b><span>Nov 27</span><em>Pending</em><u>$3,400.00</u></p>
               <p class="on"><i></i><b>Atlas Freight</b><span>Nov 27</span><em>Pending</em><u>$9,120.00</u></p>
               <p><i></i><b>Ines Duarte</b><span>Nov 28</span><em>Pending</em><u>$1,860.00</u></p>
               <p><i></i><b>Bright Kiln</b><span>Nov 30</span><em>Pending</em><u>$2,245.00</u></p>
             </div>
-            <div class="po-b"><b>2 selected</b><span>Approve</span><span>Hold</span></div>
+            <div class="po-b"><span>Clear selection</span><b>Approve 2 payouts</b></div>
           </div></div>
           <div class="side alone"><div class="ge">
             <header><b>Payouts Dashboard</b><span>+ Create New Payout</span></header>
@@ -122,19 +160,6 @@
       <ol class="log" id="log"></ol>
     </section>
 
-    <section class="panel-x find" id="find">
-      <div class="title">
-        <h2><label for="q">Find it by what it does.</label> <span>Not by where you saw it.</span></h2>
-      </div>
-      <div class="search">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-        <input id="q" type="search" placeholder="Search the bank" autocomplete="off" spellcheck="false">
-        <output id="count" for="q"></output>
-      </div>
-      <div class="tries" id="tries"></div>
-      <div class="grid" id="grid"></div>
-    </section>
-
     <section class="panel-x keys" id="keys">
       <div class="keys-text"><h2 id="key-text"></h2></div>
       <div class="keys-pad">
@@ -149,6 +174,7 @@
     <div class="end-top">
       <p id="tally">Nothing banked yet. <a href="#desk">Go capture something</a></p>
       <p>Your bank is stored on your Mac. Claude sees a screen to describe it, or when your agent asks for it.</p>
+      <p>The refs on this page belong to their designers and link to their posts. Dabanks is not affiliated with them.</p>
     </div>
     <p class="word" aria-hidden="true"><span>dabanks</span></p>
   </footer>
