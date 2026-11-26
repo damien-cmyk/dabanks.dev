@@ -1,6 +1,6 @@
 // The page is its own demo: what the visitor captures is cut out of the page, described, and banked.
 // Everything happens in the tab, nothing is sent anywhere.
-import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=01deef0c";
+import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=ad276c34";
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html = "") => Object.assign(document.createElement(tag), { className: cls, innerHTML: html });
@@ -92,15 +92,16 @@ function bankIt(ref) {
 const paintRecent = () => $("recent").replaceChildren(...bank.slice(0, 4).map(thumb));
 
 // ---------- find ----------
-let whole = false;
+let whole = false, found = [];
 function paintGrid(fresh) {
   const typed = $("q").value.toLowerCase().split(/\s+/).filter(Boolean);
-  const found = bank.filter((r) => typed.every((w) => r.text.includes(w)));
+  found = bank.filter((r) => typed.every((w) => r.text.includes(w)));
   const draw = () => {
     const some = typed.length || whole ? found : found.slice(0, 12);
     $("grid").replaceChildren(...(found.length ? some.map((r) => {
       const f = el("figure", r === fresh ? "card new" : "card");
-      const frame = el("div", "card-in"), shot = r.draw();
+      const frame = Object.assign(el("button", "card-in"), { type: "button", ariaLabel: `Open ${r.title}` }), shot = r.draw();
+      frame.addEventListener("click", () => openRef(r));
       fitIn(shot, 204);
       frame.append(shot);
       if (r.id && moves(r.id)) {
@@ -131,6 +132,75 @@ $("tries").append(...["table", "command palette", "mobile app", "badge", "dark",
   return b;
 }));
 $("q").addEventListener("input", () => { markTries(); paintGrid(); });
+
+// ---------- a ref, opened: the whole picture and what the bank knows of it ----------
+let opened = 0;
+function openRef(r) {
+  opened = Math.max(0, found.indexOf(r));
+  fillRef();
+  if (!$("ref").open) $("ref").showModal();
+  $("ref-close").focus();
+}
+const KINDS = { screen: "Screen", ui_lib: "UI library", tool: "Design tool", skill: "Skill" };
+const show = (node, on) => { node.closest("div, section").hidden = !on; };
+function fillRef() {
+  const r = found[opened], R = r.id && REFS[r.id], shot = r.draw(), [w, h] = shot.style.aspectRatio.split("/").map(Number);
+  shot.style.setProperty("--r", w / h);
+  $("ref-media").replaceChildren(shot);
+  if (r.id && moves(r.id)) play(shot, r.id);
+  $("ref-title").textContent = r.title;
+  $("ref-kind").textContent = $("ref-type").textContent = KINDS[R?.kind] ?? "Screen";
+  for (const id of ["ref-link", "ref-url", "ref-open"]) { $(id).hidden = !R; if (R) $(id).href = R.url; }
+  $("ref-link").innerHTML = R ? `x.com <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg>` : "";
+  $("ref-url").textContent = R?.url ?? "";
+  show($("ref-url"), !!R);
+  if (R) {
+    $("ref-by").href = `https://x.com/${R.by}`;
+    $("ref-by").innerHTML = `${face(R.by)}<span>${esc(PEOPLE[R.by].name)}</span>`;
+  }
+  show($("ref-by"), !!R);
+  $("ref-product").textContent = R?.product ?? "";
+  show($("ref-product"), !!R?.product);
+  $("ref-summary").textContent = R?.summary ?? "";
+  show($("ref-summary"), !!R?.summary);
+  $("ref-use").textContent = R?.use ?? "";
+  show($("ref-use"), !!R?.use);
+  // where the bank knows where each pattern sits, pointing at it shows the spot, as in the window above
+  const parts = R?.parts ?? [], lens = parts.length ? el("i", "lens") : null;
+  if (lens) shot.append(lens);
+  const aim = (n) => {
+    const part = parts[n];
+    lens.classList.toggle("on", !!part);
+    if (part) ["left", "top", "width", "height"].forEach((k, i) => { lens.style[k] = `${part[i + 2]}%`; });
+    [...$("ref-patterns").children].forEach((b, i) => b.classList.toggle("on", i === n));
+  };
+  $("ref-patterns").replaceChildren(...(parts.length ? parts.map(([p]) => p) : R?.patterns ?? []).map((p, n) => {
+    const b = Object.assign(el(parts.length ? "button" : "span", "tag"), { textContent: p[0].toUpperCase() + p.slice(1) });
+    if (parts.length) {
+      b.type = "button";
+      for (const on of ["pointerenter", "focus", "click"]) b.addEventListener(on, () => aim(n));
+      for (const off of ["pointerleave", "blur"]) b.addEventListener(off, () => aim(-1));
+    }
+    return b;
+  }));
+  show($("ref-patterns"), $("ref-patterns").children.length > 0);
+  $("ref-tags").replaceChildren(...r.tags.filter((t) => !["ui", "ux", "minimal", "saas", "web app"].includes(t)).map((t) => Object.assign(el("span", "tag"), { textContent: t })));
+  show($("ref-tags"), $("ref-tags").children.length > 0);
+  $("ref-swatches").replaceChildren(...(R?.palette ?? []).map((c) => Object.assign(el("i", ""), { style: `background:${c}`, title: c })));
+  show($("ref-swatches"), !!R?.palette?.length);
+  $("ref").querySelector(".d-body").scrollTop = 0;
+}
+const step = (by) => { opened = (opened + by + found.length) % found.length; fillRef(); };
+$("ref-prev").addEventListener("click", () => step(-1));
+$("ref-next").addEventListener("click", () => step(1));
+$("ref-close").addEventListener("click", () => $("ref").close());
+$("ref").addEventListener("click", (e) => { if (e.target === $("ref")) $("ref").close(); });
+$("ref").addEventListener("keydown", (e) => {
+  if (e.target.closest("input, textarea")) return;
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
+$("ref").addEventListener("close", () => $("ref-media").querySelector("video")?.pause());
 
 // ---------- notch ----------
 let timer;
@@ -689,11 +759,6 @@ $("try").addEventListener("click", () => {
   for (const b of seg) b.addEventListener("click", () => glide(+b.dataset.x));
   set(100);
   new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); setTimeout(() => +split.value === 100 && glide(36, 1600), 900); } }, { threshold: 0.5 }).observe(cmp);
-  $("log").append(...[["2ef4ffd8", "Dropdown filters and a selection you can see"], ["d8161c08", "A figure with its own mini chart"], ["57795fa1", "The count inside the action button"]].map(([id, what]) => {
-    const li = el("li", "");
-    li.append(thumb({ draw: () => screen(id) }), el("div", "", `<b>${what}</b>${byline(id)}`));
-    return li;
-  }));
 }
 
 // ---------- keys ----------

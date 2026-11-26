@@ -36,6 +36,8 @@ export const REFS = {
    "#2563eb",
    "#e0dcf7"
   ],
+  "kind": "screen",
+  "summary": "Screenshot of a three-column shared inbox: conversation list, message thread with a customer, and a ticket details panel (status, assignee, team, attributes). A banner at the top shows a premium trial with an upgrade button, and the left column groups the views, the AI agent and the teams.",
   "use": "Reference for designing a customer support or shared messaging interface, with a conversation list, a discussion thread and a side properties panel."
  },
  "5c3268de": {
@@ -73,6 +75,9 @@ export const REFS = {
    "#e0576b",
    "#5b5bd6"
   ],
+  "kind": "screen",
+  "product": "Knowspace",
+  "summary": "Random facts discovery interface: a search bar at the top, a Surprise me button and floating cards with facts illustrated by photos of objects. A 0 of 20 today counter and a sidebar of topics complete the screen.",
   "use": "Reference for a minimal, editorial exploration page, with floating cards and italic serif type for short content.",
   "clip": true
  },
@@ -105,6 +110,8 @@ export const REFS = {
    "#b9b9d4",
    "#2a1a1a"
   ],
+  "kind": "screen",
+  "summary": "A translucent frosted glass popover offers four views for a space (List, Grid, Kanban, Canvas), with Canvas selected and marked with a checkmark. It is anchored to a \"plus\" and \"...\" action button on a desktop window.",
   "use": "Reference for a view or display mode selector presented as cards in a popover anchored to an action bar, with a clearly marked active state.",
   "clip": true
  },
@@ -140,6 +147,8 @@ export const REFS = {
    "#fbbf24",
    "#9ca3af"
   ],
+  "kind": "screen",
+  "summary": "Warehouse tracking panel with selection of zones A1 to A5, KPI indicators in percent and kWh with small orange bar charts, and an available capacity card with a weekly line chart. The product is not named in the image.",
   "use": "Reference for a dense operational tracking dashboard, with KPIs accompanied by colored sparklines and a zone selector as chips.",
   "parts": [
    [
@@ -209,6 +218,8 @@ export const REFS = {
    "#f5f5f5",
    "#9a9a9a"
   ],
+  "kind": "screen",
+  "summary": "Dark activity feed with filters by type (All, Comments, Changes, Deploys, Files) and an unread counter, grouped by day. Each row combines avatar, type icon, bold action, context and time, with a purple dot for unread items.",
   "use": "Reference for a notification center or a dense activity log in dark mode, with segmented control filters and grouping by date.",
   "parts": [
    [
@@ -283,6 +294,8 @@ export const REFS = {
    "#15131a",
    "#8a6a88"
   ],
+  "kind": "screen",
+  "summary": "Stats card with a thin pink bar chart, a vertical cursor and a value bubble (392) on hover over a month. Two KPIs are shown at the bottom: total followers 587 and new followers 116.",
   "use": "Reference for an interactive thin-bar chart with a hover cursor and a value bubble in a KPI card.",
   "clip": true
  },
@@ -317,6 +330,8 @@ export const REFS = {
    "#fdeceb",
    "#d93025"
   ],
+  "kind": "screen",
+  "summary": "Invoice table with two dropdown filters (Status, Total), per-row checkboxes and a select-all. Columns Total, Due, Status (PAID, OVERDUE, DRAFT badges) and a truncated Invoice column on the right.",
   "use": "Reference for a dense financial data table with filters, multiple selection and colored status badges.",
   "parts": [
    [
@@ -381,6 +396,8 @@ export const REFS = {
    "#8a8a8a",
    "#d4d4d4"
   ],
+  "kind": "screen",
+  "summary": "Minimalist AI chat-style input field interface on a light gray background, with a status bar \"Preparing questions...\" and an animated loading indicator. The \"Ask anything...\" field shows a circular send button at the bottom right.",
   "use": "Reference for a generation or preparation state in an AI chat interface, with a pill-shaped prompt and a rounded input area.",
   "clip": true
  },
@@ -415,6 +432,8 @@ export const REFS = {
    "#e0352b",
    "#ececec"
   ],
+  "kind": "screen",
+  "summary": "Chronological view of four AI agents (Researcher, Writer, Reviewer, Ops) over the last 30 minutes, with one lane per agent and task bars linked to the tools used. The running, idle and needs you statuses are flagged, and a dotted link connects two tasks that follow each other.",
   "use": "Reference for designing an agent tracking board in time lanes, with statuses, ongoing tasks and a human approval alert.",
   "parts": [
    [
@@ -492,6 +511,9 @@ export const REFS = {
    "#a1a1aa",
    "#27272a"
   ],
+  "kind": "screen",
+  "product": "Bklit UI",
+  "summary": "Screenshot of a dark line chart showing the ACME Inc stock price ($127.04), with change and a period selector 1D, 1W, 1M, 6M, 1Y. The post announces range selections for line and area charts, in development.",
   "use": "Reference for a minimal stock price chart in a dark theme, with a value header, a colored change and a period segmented control.",
   "clip": true
  },
@@ -529,6 +551,9 @@ export const REFS = {
    "#fbc02d",
    "#f06292"
   ],
+  "kind": "screen",
+  "product": "Realm",
+  "summary": "Issues list view of a Realm project in an app window on an illustrated background: navigation sidebar, table with title, status, priority, assignee and dates. The source post simply announces an Issues view.",
   "use": "Reference for a dense ticket table with status badges, priority indicators and assignee avatars in a project management tool."
  },
  "7a526855": {
@@ -564,6 +589,8 @@ export const REFS = {
    "#f7a524",
    "#ff00a8"
   ],
+  "kind": "screen",
+  "summary": "Grid of four health tracking cards (heart rate, sleep, weight, steps) with the weekly average, small per-day charts and day 5 selected in a black pill. The post asks which stat to add to this dashboard.",
   "use": "Reference for a grid of KPI cards with 7-day charts, a highlighted selected day and a distinct color for each metric."
  },
  "bb1d07b9": {
@@ -597,6 +624,8 @@ export const REFS = {
    "#34c759",
    "#ff9500"
   ],
+  "kind": "screen",
+  "summary": "Screenshot of an iOS to-do app with an All/Schedule segmented control, a day selection strip and a task list with time, category and date or importance tags. The accompanying post praises the Liquid Glass effect.",
   "use": "Reference for a mobile screen of scheduled tasks, with a segmented control and a translucent Liquid Glass-style panel."
  },
  "ed615818": {
@@ -633,6 +662,8 @@ export const REFS = {
    "#facc15",
    "#e11d48"
   ],
+  "kind": "screen",
+  "summary": "Two mobile screens of an investing app with a total balance, buttons Deposit, Withdraw and Earn, a Round-ups card with a progress bar and transaction chips, then an Allocation section with a period selector and a list breakdown. The bottom navigation bar offers Home, Portfolio, Activity and Profile.",
   "use": "Reference for a home page of a mobile investing fintech app, with a prominent balance, quick actions and a minimal portfolio breakdown."
  },
  "57795fa1": {
@@ -667,6 +698,8 @@ export const REFS = {
    "#10b981",
    "#6b6b6b"
   ],
+  "kind": "screen",
+  "summary": "Repository management modal with search, status filters (All, Enabled, Disabled), a list of repositories with checkboxes and state badges, and actions Clear selection and Disable 3 repositories. The product is not named in the screenshot.",
   "use": "Reference for a multi-select modal with status filters, search and a grouped action on a list of items.",
   "parts": [
    [
@@ -733,6 +766,9 @@ export const REFS = {
    "#1a1a1a",
    "#8a8a8f"
   ],
+  "kind": "screen",
+  "product": "disarto",
+  "summary": "Collapsible \"Getting started\" onboarding checklist with a segmented progress bar (2/5) and a list of numbered steps, two of them checked in green. The post mentions a light and dark mode version.",
   "use": "Reference for designing a collapsible onboarding checklist with segmented progress and numbered steps to check off."
  },
  "5659d044": {
@@ -768,6 +804,8 @@ export const REFS = {
    "#8a8a8a",
    "#10b981"
   ],
+  "kind": "screen",
+  "summary": "Two views of the same \"Update pricing page\" deployment: on the left a vertical timeline with timestamps and completed, skipped or pending steps, on the right a duration bar segmented by phase (build, deploy) followed by a list of checked steps. The total shown is 42s with a green live link.",
   "use": "Reference for designing a deployment pipeline tracker or step progress with durations, skipped states and a time-based timeline."
  },
  "839f3209": {
@@ -801,6 +839,8 @@ export const REFS = {
    "#d1d5db",
    "#10b981"
   ],
+  "kind": "screen",
+  "summary": "Step 1 of an email subscriber CSV import flow, with a 3-step stepper (CSV Template, Mapping, Confirm Upload) and a dashed drop zone. A card lets you download a CSV template, and the size limit (25MB) and accepted formats are displayed.",
   "use": "Reference for a multi-step file import flow with a drop zone, template download and displayed format constraints."
  },
  "1bd3c997": {
@@ -832,6 +872,8 @@ export const REFS = {
    "#111111",
    "#6b6b6b"
   ],
+  "kind": "screen",
+  "summary": "A mobile panel shows a 50% progress status with an orange circular indicator, then a list of two steps: one checked in green with a description, one unchecked with a description. An orange \"What's this?\" link completes the block.",
   "use": "Reference for a progress screen of a multi-step journey, with a percentage summary and a detailed checklist in a bottom sheet or mobile panel."
  },
  "66fda697": {
@@ -864,6 +906,9 @@ export const REFS = {
    "navigation sidebar with search"
   ],
   "palette": [],
+  "kind": "screen",
+  "product": "recruitpilot",
+  "summary": "Dark dashboard of a recruiting tool with a line chart of job postings per day, a table of postings with lead variations, and an email and LinkedIn message inbox with an open conversation thread. The left sidebar lists the pages Dashboard, Campaigns and Messages.",
   "use": "Reference for a dark SaaS dashboard combining a trend chart, a dense table and a two-column inbox in Figma."
  },
  "2b96f482": {
@@ -899,6 +944,9 @@ export const REFS = {
    "#e8e8ea",
    "#e4673a"
   ],
+  "kind": "screen",
+  "product": "SocAI",
+  "summary": "Dark dashboard of a social media management tool with a grouped navigation sidebar. An open command palette shows actions, recent searches and quick actions with keyboard shortcuts.",
   "use": "Reference for a dark command palette with grouped sections, search at the top and keyboard shortcut hints at the bottom."
  },
  "b2fdfb4f": {
@@ -936,6 +984,9 @@ export const REFS = {
    "#5b4fd6",
    "#f3f4f6"
   ],
+  "kind": "screen",
+  "product": "Sajon",
+  "summary": "Dashboard of an ESG / GHG reporting tool with a navigation sidebar, a combined bar and line chart of emissions, KPI cards and an AI summary panel with chat. The source post presents it as a dashboard page from a recent project.",
   "use": "Reference for a dense reporting dashboard with a trend chart, KPIs per scope and a side AI assistant panel."
  },
  "f24bba3e": {
@@ -967,6 +1018,8 @@ export const REFS = {
    "#2b2b33",
    "#8a8a90"
   ],
+  "kind": "screen",
+  "summary": "Workout planning onboarding screen with a weekday selector (Mo to Sa) in circles, two days selected in pink with a halo, and a \"2 of 3 days\" counter. A yoga mat illustration and a photo at the top introduce the goal \"3 days a week\".",
   "use": "Reference for a frequency or weekly schedule choice screen in a mobile onboarding, with day selection in circles and text progress."
  },
  "15a4be07": {
@@ -1003,6 +1056,8 @@ export const REFS = {
    "#ffffff",
    "#666666"
   ],
+  "kind": "screen",
+  "summary": "Two variants of an account menu showing a list of spaces (Northwind, Opus Studio, Atlas Labs) with a New space button, then settings (Account settings, Dark mode, Connected apps, Notifications) and a red Log out action. The dark version shows a Dark mode toggle turned on in blue.",
   "use": "Reference for an account dropdown menu or a space selector with a light/dark toggle, especially for icon-label alignment and the checkmark active state."
  },
  "d5bf0dbf": {
@@ -1034,6 +1089,8 @@ export const REFS = {
    "#4cba5c",
    "#1a1a1a"
   ],
+  "kind": "screen",
+  "summary": "A dashed drop zone sits above a list of two files, bill-of-lading.pdf completed (98 KB of 98 KB, status Complete) and proof-of-delivery.xls being uploaded (38 KB of 67 KB, Uploading). Each row combines a file type icon, the name, the size, a status and a segmented progress bar.",
   "use": "Reference for designing a multi-file upload component with completed and in-progress states, per-file progress and format icons."
  },
  "135c1f1e": {
@@ -1067,6 +1124,8 @@ export const REFS = {
    "#9bb3f0",
    "#111111"
   ],
+  "kind": "screen",
+  "summary": "Payments card showing an annual total with percentage change, above a stacked histogram by city and payment method (Cash, QR, Bank). The bars are rendered with a dither dot texture, and a Week, Month, Quarter, Year selector serves as the time filter.",
   "use": "Reference for a stacked bar chart styled with dither or a dot texture, paired with a KPI and a segmented period filter.",
   "clip": true
  },
@@ -1103,6 +1162,9 @@ export const REFS = {
    "#d9610f",
    "#8a8a8a"
   ],
+  "kind": "screen",
+  "product": "Interfere",
+  "summary": "A dark menu groups the states of an integration by category (Connection, Data, Access), with the \"Setup incomplete\" state selected. On the right, the integration card shows a \"2 of 3\" progress bar, a \"Pending\" status and properties in rows.",
   "use": "Reference for designing a menu of grouped states and a configuration card with progress, status and key-value properties in a web app.",
   "clip": true
  },
@@ -1142,6 +1204,8 @@ export const REFS = {
    "#1f1f1f",
    "#8a8a8a"
   ],
+  "kind": "screen",
+  "summary": "View of a chat-based data analysis tool: a response on the left with a SQL query and metric, and on the right a panel with a stacked bar chart of net revenue by plan (Business, Team, Starter) from April to September, a detailed tooltip on September and a table by plan with changes vs Q2.",
   "use": "Reference for a data visualization side panel attached to a chat response, with Chart/SQL/Data tabs, a stacked chart and a summary table."
  },
  "63b3d242": {
@@ -1179,6 +1243,9 @@ export const REFS = {
    "#dc2626",
    "#2563eb"
   ],
+  "kind": "screen",
+  "product": "Atlas",
+  "summary": "Management dashboard for a content delivery network (CDN) with a world map of regions, a navigation sidebar, a filterable request table and an agent chat panel on the right. The post announces one spot left for the following month at visinex.studio.",
   "use": "Reference for a dense infrastructure dashboard with a map, a filterable log table and a side AI assistant panel."
  },
  "c53ca7f1": {
@@ -1215,6 +1282,9 @@ export const REFS = {
    "#f0700a",
    "#e5282a"
   ],
+  "kind": "screen",
+  "product": "Kanbaaan",
+  "summary": "Kanban board for task tracking with To do, In progress and Done columns. Each card shows priority, assignee, due date or status, and one card is shown mid drag and drop.",
   "use": "Reference for a minimal SaaS kanban view, dense in metadata, with cards using colored chips for priority and due dates."
  },
  "513ec833": {
@@ -1253,6 +1323,9 @@ export const REFS = {
    "#e5484d",
    "#c6f432"
   ],
+  "kind": "screen",
+  "product": "Ace Studio",
+  "summary": "Analytics dashboard with a navigation sidebar, KPI cards (Gross Sales, Returning customer rate, Order fulfillment), a sales-over-time chart and a Top products table. Period, currency and channel filters at the top of the page, floating Ask Viictor button.",
   "use": "Reference for a dense e-commerce dashboard with KPIs, a comparative time chart and a list of products with progress bars."
  },
  "1473f3d9": {
@@ -1290,6 +1363,8 @@ export const REFS = {
    "#e8a94a",
    "#6b8fd6"
   ],
+  "kind": "screen",
+  "summary": "Workflow editor showing the Add Node panel with app search, favorites, and the list of actions offered for an app (Create, Update, Find Task). The canvas shows Trigger and Action nodes linked together.",
   "use": "Reference for designing a no-code automation editor: add node panel, action selection per app and Trigger/Action hierarchy on the canvas."
  },
  "8e5d5f6d": {
@@ -1325,6 +1400,9 @@ export const REFS = {
    "#d97706",
    "#16a34a"
   ],
+  "kind": "screen",
+  "product": "Foggy",
+  "summary": "Dense table of LLM metrics (LLM, tokens, p95 latency, cost) sortable by column, with costs colored by threshold (red, orange, green) and a \"Last 30 days\" period selector. A desktop window with a Chat button and a Foggy panel as a tab.",
   "use": "Reference for a dense monitoring table with sortable columns, right-aligned numeric values and threshold color coding on costs.",
   "clip": true
  },
@@ -1360,6 +1438,9 @@ export const REFS = {
    "#4fc3f7",
    "#7c4dff"
   ],
+  "kind": "screen",
+  "product": "AlignUI",
+  "summary": "Two widget cards on a gray background: a horizontal bar chart of major expenses with a Weekly filter and a hover tooltip, and a credit score card with a green segmented gauge and an emoji badge. The cards frame a partial empty state at the top and bottom.",
   "use": "Reference for designing a personal finance widget or a dashboard with a bar chart, tooltip and segmented gauge."
  },
  "8ed52223": {
@@ -1396,6 +1477,8 @@ export const REFS = {
    "#dc2626",
    "#60a5fa"
   ],
+  "kind": "screen",
+  "summary": "Sales pipeline dashboard with KPIs at the top (pipeline value, active deals, average size), deal stage columns (Prospecting, Qualified, Demo, Proposal), a revenue forecast chart and a lead scoring leaderboard. AI call summaries appear at the bottom.",
   "use": "Reference for a dense CRM dashboard with KPI cards, a kanban pipeline view and scoring panels, to adapt in Figma."
  },
  "12d5c280": {
@@ -1430,6 +1513,8 @@ export const REFS = {
    "#22c55e",
    "#8a8a8e"
   ],
+  "kind": "screen",
+  "summary": "A lead ranking in a dark card, with a slightly tilted perspective and depth blur. Each row shows an avatar, a name, an email and a score, the top two scores being highlighted in green.",
   "use": "Reference for a leaderboard table or a score list in a dark dashboard, with a perspective depth effect."
  },
  "e8075f86": {
@@ -1466,6 +1551,9 @@ export const REFS = {
    "#e11d48",
    "#7c3aed"
   ],
+  "kind": "screen",
+  "product": "Kargul Studio",
+  "summary": "Dashboard of a payroll web app with KPIs, pending payouts, a payments table and a list of tasks to process. The sidebar navigation groups Dashboard, People, Payroll, Finance, Analytics and Services.",
   "use": "Reference for a dense fintech SaaS dashboard: KPI cards with change, a transactions table with statuses, and a task panel grouped by category."
  },
  "47b6db23": {
@@ -1502,6 +1590,9 @@ export const REFS = {
    "#111111",
    "#6b7280"
   ],
+  "kind": "screen",
+  "product": "ZeroPath",
+  "summary": "Side panel showing the detail of a vulnerability (authorization bypass in PUT /messages) with a severity score, description, list of analysis sources (repo, application, source, source-to-sink analysis), potential assignee and the actions Generate Patch and View code. The left navigation lists Dashboard, Scans, Issues, Repositories and the Config section.",
   "use": "Reference for an issue detail screen in a security tool: side panel with tabs, severity badges and a list of clickable links to an explorer."
  },
  "9b3c4c37": {
@@ -1537,6 +1628,9 @@ export const REFS = {
    "#8a8a8a",
    "#e9f26b"
   ],
+  "kind": "screen",
+  "product": "Ace Studio",
+  "summary": "Chat interface with an Orchestrator agent that asks a scoping question before generating ad creatives, with a navigation sidebar (Home, Analytics, Plan, Apps, Tools, pinned chats). A choice panel offers numbered answers, Dismiss and Submit.",
   "use": "Reference for an agentic chat screen where the AI asks the user for a decision through a panel of numbered choices with keyboard navigation."
  },
  "2809d155": {
@@ -1572,6 +1666,9 @@ export const REFS = {
    "#6b6b6b",
    "#e5e5e5"
   ],
+  "kind": "screen",
+  "product": "Heyrico",
+  "summary": "Apps page of a workspace's settings, with a search bar, filters Sort, Type and Categories, and a grid of cards for connected apps (X, GitHub, Slack, Asana, Zoom, Trello, Figma, Notion, Canva, Dropbox, Microsoft Teams, Jira, Google Drive, Loom). Each card shows a logo, a name, a short description and a plus button.",
   "use": "Reference for an integrations or connected apps management page in settings, with a two-column card list and inline filters."
  },
  "295c1617": {
@@ -1603,6 +1700,8 @@ export const REFS = {
    "#d9d9d9",
    "#e8a0a0"
   ],
+  "kind": "screen",
+  "summary": "A floating dropdown menu below a three-dot button, with actions grouped by separators (open, rename, duplicate, copy link, move, delete in red). A selector at the bottom compares three widths: Cramped, Balanced, Stretched.",
   "use": "Reference for sizing a dropdown or action menu according to the width of its longest label, with padding and separators.",
   "clip": true
  },
@@ -1636,6 +1735,8 @@ export const REFS = {
    "#8a8a8a",
    "#f5f5f5"
   ],
+  "kind": "screen",
+  "summary": "Two dark cards listing human visits by platform (ChatGPT, Perplexity, Gemini, Claude, Copilot) with percentage and total. The right version enables tabular figures to align the numeric columns, the left one stays in the default rendering.",
   "use": "Reference for aligning columns of numbers in a table or data card, and for showing the effect of tabular figures on readability."
  },
  "ba35938e": {
@@ -1670,6 +1771,9 @@ export const REFS = {
    "#0e6b57",
    "#c9dde6"
   ],
+  "kind": "screen",
+  "product": "Paper",
+  "summary": "Slack integration detail page with breadcrumb, Connected status, workspace details and a list of permissions with toggles. A preview card shows a Paper notification sent in Slack about a comment.",
   "use": "Reference for an integration detail page with status, metadata and permissions that can be switched on or off with toggles."
  },
  "0a509cbb": {
@@ -1706,6 +1810,9 @@ export const REFS = {
    "#e8e8ee",
    "#6b7280"
   ],
+  "kind": "screen",
+  "product": "CloseCRM",
+  "summary": "Two-column task detail page: on the left the task information (status, priority, due date, contact, description, tags), on the right tabs Activity, Comments, Notes, Subtasks and Attachments with counters. The actions Create Sub task, Add Comments, Add Notes and Edit are grouped in the header.",
   "use": "Reference for a task or ticket detail page that must give context at a glance, with a fixed info column and a scrollable activity column in tabs."
  },
  "c4c75a74": {
@@ -1742,6 +1849,9 @@ export const REFS = {
    "#1f2937",
    "#9ca3af"
   ],
+  "kind": "screen",
+  "product": "CloseCRM",
+  "summary": "CRM contact record with a header (photo, name, quick actions), contact information columns, activity tabs, task list and company information panel. Sidebar navigation with favorites and recent chats.",
   "use": "Reference for a dense CRM contact record: three columns, timeline tabs, tasks with status and priority, and a company panel with tags."
  },
  "cdbc7ddf": {
@@ -1775,6 +1885,9 @@ export const REFS = {
    "#4ac0fa",
    "#f6b21b"
   ],
+  "kind": "screen",
+  "product": "AlignUI",
+  "summary": "Two white widget cards on a gray background: \"Daily Work Hours\" shows a total in hours and minutes, a three-color segmented bar with a legend, and \"Training Analysis\" shows a course counter, a group of avatars and a purple mini bar chart.",
   "use": "Reference for a time tracking or training widget in a dashboard, with a card header, a Details button, a segmented bar and a mini chart."
  },
  "9d966a61": {
@@ -1811,6 +1924,9 @@ export const REFS = {
    "#d4f5dd",
    "#333333"
   ],
+  "kind": "screen",
+  "product": "AlignUI",
+  "summary": "AI chat interface with a sidebar listing new chats, projects, pinned and recent, and a conversation window. A user dropdown menu shows the PRO profile, dark mode, settings, language, help and logout.",
   "use": "Reference for a chat layout with a history sidebar and an account menu as a popover anchored to the profile."
  },
  "eb1244fe": {
@@ -1846,6 +1962,8 @@ export const REFS = {
    "#e8702a",
    "#22c55e"
   ],
+  "kind": "screen",
+  "summary": "Overview card of an AI agent named Jake, executive assistant role, with active status, owner, integrations Gmail, Google Calendar and Notion, and an ongoing task with a progress bar. The source announces light and dark variants.",
   "use": "Reference for showing the state of an AI agent, its ongoing task and its connectors in a minimal dashboard."
  },
  "91127afd": {
@@ -1879,6 +1997,8 @@ export const REFS = {
    "#6b7280",
    "#f26b2a"
   ],
+  "kind": "screen",
+  "summary": "Notification settings page in a web interface, with a sidebar grouped into Personal and Workspace. Each notification is set per channel (Off, Email, In-app, Both) and a Smart notifications toggle is shown at the top.",
   "use": "Reference for a notification preferences page per event and per channel, with grouped sections and a segmented control."
  }
 };
