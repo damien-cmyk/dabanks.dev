@@ -1,6 +1,6 @@
 // The page is its own demo: what the visitor captures is cut out of the page, described, and banked.
 // Everything happens in the tab, nothing is sent anywhere.
-import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=5f57468e";
+import { SHOWN, REFS, PEOPLE, FEATURED } from "./bank.js?v=01deef0c";
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html = "") => Object.assign(document.createElement(tag), { className: cls, innerHTML: html });

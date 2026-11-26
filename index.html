@@ -15,7 +15,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=5f57468e">
+  <link rel="stylesheet" href="styles.css?v=01deef0c">
 </head>
 <body>
   <svg width="0" height="0" hidden aria-hidden="true">
@@ -81,19 +81,24 @@
       <div class="tray">
         <div class="cmp-box" id="cmp">
           <div class="side with"><div class="po">
-            <header><b>Payouts</b><span>New payout</span></header>
+            <header><div><b>Payouts</b><span>Choose what goes out on Friday.</span></div><span class="po-new">New payout</span></header>
             <div class="po-k">
-              <p><span>Paid out this week</span><b>$48,210</b><i style="--h:42%"></i><i style="--h:58%"></i><i style="--h:36%"></i><i style="--h:100%" class="on"></i><i style="--h:70%"></i><i style="--h:52%"></i><i style="--h:24%"></i></p>
-              <p><span>Waiting for approval</span><b>14</b><i style="--h:30%"></i><i style="--h:44%"></i><i style="--h:52%"></i><i style="--h:60%"></i><i style="--h:100%" class="on"></i><i style="--h:40%"></i><i style="--h:34%"></i></p>
+              <p><b>$48,210</b><span>Paid out this week</span><span class="po-c"><i style="--h:46%"></i><i style="--h:62%"></i><i style="--h:40%"></i><i style="--h:74%"></i><i style="--h:58%"></i><i style="--h:100%" class=on></i><i style="--h:66%"></i></span></p>
+              <p><b>14</b><span>Waiting for approval</span><span class="po-c"><i style="--h:38%"></i><i style="--h:52%"></i><i style="--h:70%"></i><i style="--h:48%"></i><i style="--h:60%"></i><i style="--h:44%"></i><i style="--h:100%" class=on></i></span></p>
+              <p><b>1.6<small>days</small></b><span>To approve, on average</span><span class="po-c"><i style="--h:80%"></i><i style="--h:64%"></i><i style="--h:100%" class=on></i><i style="--h:52%"></i><i style="--h:58%"></i><i style="--h:42%"></i><i style="--h:36%"></i></span></p>
             </div>
-            <div class="po-f"><span class="set">Status</span><span>Amount</span><span>Bank</span><span>Date</span></div>
+            <div class="po-bar">
+              <div class="po-tabs"><span class="on">All <em>18</em></span><span>Pending <em>14</em></span><span>Overdue <em>1</em></span></div>
+              <div class="po-f"><span>Bank</span><span>Date</span></div>
+            </div>
             <div class="po-t">
-              <p class="on"><i></i><b>Cleo Marsh</b><span>Nov 27</span><em>Pending</em><u>$3,400.00</u></p>
-              <p class="on"><i></i><b>Atlas Freight</b><span>Nov 27</span><em>Pending</em><u>$9,120.00</u></p>
-              <p><i></i><b>Ines Duarte</b><span>Nov 28</span><em>Pending</em><u>$1,860.00</u></p>
-              <p><i></i><b>Bright Kiln</b><span>Nov 30</span><em>Pending</em><u>$2,245.00</u></p>
+              <p class="th"><i class="some"></i><b>Recipient</b><b>Due</b><b>Status</b><b>Amount</b></p>
+              <p class="on"><i></i><span class="who"><s style="--t:#f5e3d3">CM</s><b>Cleo Marsh</b><small>Chase •• 4821</small></span><span>Nov 27</span><em class="wait">Pending</em><u>$3,400.00</u></p>
+              <p class="on"><i></i><span class="who"><s style="--t:#dfe8f3">AF</s><b>Atlas Freight</b><small>Mercury •• 0917</small></span><span>Nov 27</span><em class="wait">Pending</em><u>$9,120.00</u></p>
+              <p><i></i><span class="who"><s style="--t:#e6efdf">ID</s><b>Ines Duarte</b><small>Wise •• 3306</small></span><span>Nov 24</span><em class="late">Overdue</em><u>$1,860.00</u></p>
+              <p class="fade"><i></i><span class="who"><s style="--t:#efe6f1">BK</s><b>Bright Kiln</b><small>Chase •• 7752</small></span><span>Nov 21</span><em class="paid">Paid</em><u>$2,245.00</u></p>
             </div>
-            <div class="po-b"><span>Clear selection</span><b>Approve 2 payouts</b></div>
+            <div class="po-b"><span>Clear selection</span><b>Approve 2 payouts <small>$12,520</small></b></div>
           </div></div>
           <div class="side alone"><div class="ge">
             <header><b>Payouts Dashboard</b><span>+ Create New Payout</span></header>
@@ -181,6 +186,6 @@
     <p class="word" aria-hidden="true"><span>dabanks</span></p>
   </footer>
 
-  <script src="site.js?v=5f57468e" type="module"></script>
+  <script src="site.js?v=01deef0c" type="module"></script>
 </body>
 </html>
